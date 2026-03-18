@@ -6,16 +6,14 @@
     <title>MindU - ระบบติดตามดูแลสุขภาพจิตนักศึกษา</title>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
     <style>
         :root {
-            --bg-color: #f0f7f4;
-            --primary-blue: #a2d2ff;
-            --primary-green: #bde0fe;
-            --primary-purple: #cdb4db;
-            --text-main: #3d405b;
+            --text-main: #2b2d42;
             --white: #ffffff;
-            --shadow: 0 4px 15px rgba(0,0,0,0.05);
+            --shadow: 0 10px 25px rgba(0,0,0,0.08);
+            --glass-bg: rgba(255, 255, 255, 0.85);
         }
 
         * {
@@ -26,7 +24,10 @@
         }
 
         body {
-            background-color: var(--bg-color);
+            /* สีสันพื้นหลังแบบ Gradient เคลื่อนไหวได้ */
+            background: linear-gradient(-45deg, #ffc8dd, #bde0fe, #cdb4db, #ffffb5);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
             color: var(--text-main);
             min-height: 100vh;
             display: flex;
@@ -35,20 +36,28 @@
             padding: 20px;
         }
 
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
         .container {
             width: 100%;
             max-width: 800px;
-            background: var(--white);
-            border-radius: 20px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
             box-shadow: var(--shadow);
-            padding: 30px;
-            margin-top: 20px;
-            animation: fadeIn 0.5s ease;
+            padding: 35px;
+            margin-top: 10px;
+            animation: bounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            border: 2px solid rgba(255, 255, 255, 0.5);
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        @keyframes bounceIn {
+            0% { transform: scale(0.9); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
         }
 
         h1, h2, h3 { text-align: center; margin-bottom: 20px; }
@@ -56,73 +65,86 @@
         .mt-3 { margin-top: 20px; }
 
         .btn {
-            padding: 12px 24px;
+            padding: 14px 28px;
             border: none;
-            border-radius: 12px;
+            border-radius: 16px;
             font-size: 16px;
             cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: 500;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
         
-        .btn-primary { background-color: var(--primary-blue); color: var(--text-main); width: 100%; font-size: 18px; }
-        .btn-primary:hover { background-color: #8ec0ef; transform: scale(1.02); }
-        
-        .btn-secondary { background-color: var(--primary-purple); color: var(--text-main); }
-        .btn-secondary:hover { background-color: #c0a5d0; transform: scale(1.02); }
-
-        .btn-back { background-color: #e9ecef; margin-bottom: 20px; }
-
-        .role-buttons {
-            display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; margin-top: 30px;
+        .btn-primary { 
+            background: linear-gradient(135deg, #a2d2ff, #bde0fe); 
+            color: var(--text-main); width: 100%; font-size: 18px; 
         }
+        .btn-primary:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 8px 20px rgba(162, 210, 255, 0.5); }
+        
+        .btn-secondary { background: linear-gradient(135deg, #cdb4db, #ffc8dd); color: var(--text-main); }
+        .btn-secondary:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(205, 180, 219, 0.5); }
+
+        .btn-back { background: #f8f9fa; margin-bottom: 25px; box-shadow: none; border: 1px solid #dee2e6; }
+        .btn-back:hover { background: #e9ecef; transform: translateX(-5px); }
+
+        .role-buttons { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; margin-top: 40px; }
         .role-card {
-            flex: 1; min-width: 250px; padding: 40px 20px; text-align: center; border-radius: 15px; cursor: pointer;
-            transition: 0.3s; background-color: var(--primary-green); font-size: 20px; font-weight: 600;
+            flex: 1; min-width: 250px; padding: 50px 20px; text-align: center; border-radius: 20px; cursor: pointer;
+            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+            background: linear-gradient(135deg, #bde0fe, #a2d2ff); 
+            font-size: 22px; font-weight: 600; border: 3px solid white;
         }
-        .role-card:hover { transform: translateY(-5px); box-shadow: var(--shadow); }
-        .role-card.staff { background-color: var(--primary-purple); }
+        .role-card.staff { background: linear-gradient(135deg, #ffc8dd, #ffafcc); }
+        .role-card:hover { transform: translateY(-10px) rotate(-1deg); box-shadow: 0 15px 30px rgba(0,0,0,0.15); }
 
-        .mood-grid {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 15px; margin-bottom: 20px;
-        }
-        
+        /* สีสันปุ่มอารมณ์ */
+        .mood-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; margin-bottom: 25px; }
         .mood-btn {
-            background: var(--bg-color); border: 2px solid transparent; border-radius: 15px; padding: 15px 10px;
-            font-size: 16px; cursor: pointer; transition: 0.3s; display: flex; flex-direction: column; align-items: center; gap: 5px;
+            background: var(--white); border: 3px solid #f8f9fa; border-radius: 20px; padding: 15px 10px;
+            font-size: 18px; font-weight: 500; cursor: pointer; transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex; flex-direction: column; align-items: center; gap: 8px; position: relative; overflow: hidden;
         }
-        .mood-btn span.emoji { font-size: 32px; }
-        .mood-btn:hover { background: var(--primary-blue); }
-        .mood-btn.active {
-            border-color: var(--primary-purple); background: var(--primary-blue); box-shadow: 0 0 10px rgba(205, 180, 219, 0.5);
-        }
+        .mood-btn span.emoji { font-size: 40px; transition: 0.3s; }
+        .mood-btn:hover { transform: translateY(-5px); }
+        .mood-btn:hover span.emoji { transform: scale(1.2); }
+        
+        /* สีกรอบและ Background เมื่อเลือกอารมณ์ */
+        .mood-btn[data-color="gold"].active { border-color: #ffd6a5; background: #fff9f0; box-shadow: 0 5px 15px rgba(255,214,165,0.5); }
+        .mood-btn[data-color="green"].active { border-color: #caffbf; background: #f2fcf1; box-shadow: 0 5px 15px rgba(202,255,191,0.5); }
+        .mood-btn[data-color="pink"].active { border-color: #ffadad; background: #fff0f0; box-shadow: 0 5px 15px rgba(255,173,173,0.5); }
+        .mood-btn[data-color="blue"].active { border-color: #a0c4ff; background: #f0f5ff; box-shadow: 0 5px 15px rgba(160,196,255,0.5); }
+        .mood-btn[data-color="orange"].active { border-color: #fdffb6; background: #fffff0; box-shadow: 0 5px 15px rgba(253,255,182,0.5); }
+        .mood-btn[data-color="dark"].active { border-color: #bdb2ff; background: #f6f5ff; box-shadow: 0 5px 15px rgba(189,178,255,0.5); }
+        .mood-btn[data-color="red"].active { border-color: #ffc6ff; background: #fff5ff; box-shadow: 0 5px 15px rgba(255,198,255,0.5); }
+        .mood-btn[data-color="cyan"].active { border-color: #9bf6ff; background: #f0fdff; box-shadow: 0 5px 15px rgba(155,246,255,0.5); }
 
         textarea {
-            width: 100%; height: 100px; padding: 15px; border: 2px solid #e9ecef; border-radius: 12px; resize: none;
-            font-size: 16px; margin-bottom: 20px; outline: none; transition: 0.3s;
+            width: 100%; height: 110px; padding: 18px; border: 2px solid #e9ecef; border-radius: 16px; resize: none;
+            font-size: 16px; margin-bottom: 20px; outline: none; transition: 0.3s; background: rgba(255,255,255,0.9);
         }
-        textarea:focus { border-color: var(--primary-blue); }
+        textarea:focus { border-color: #a2d2ff; box-shadow: 0 0 0 4px rgba(162, 210, 255, 0.2); }
 
         select {
-            width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #ccc; margin-bottom: 20px; font-size: 16px;
+            width: 100%; padding: 15px; border-radius: 14px; border: 2px solid #e9ecef; margin-bottom: 25px; 
+            font-size: 16px; outline: none; transition: 0.3s; background: white; cursor: pointer;
         }
+        select:focus { border-color: #a2d2ff; }
 
         .chart-container {
-            margin-top: 30px; padding-top: 20px; border-top: 2px dashed #e9ecef; animation: fadeIn 0.5s ease;
+            margin-top: 35px; padding-top: 25px; border-top: 2px dashed #cdb4db; animation: fadeIn 0.5s ease;
+            background: white; border-radius: 20px; padding: 20px; box-shadow: var(--shadow);
         }
 
         .stats-box {
-            background-color: var(--primary-green); padding: 15px; border-radius: 10px; text-align: center;
-            margin-bottom: 20px; font-size: 16px; font-weight: 500;
+            background: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%); color: var(--text-main);
+            padding: 20px; border-radius: 16px; text-align: center; margin-bottom: 25px; font-size: 18px;
+            font-weight: 500; border: 2px solid white; box-shadow: 0 5px 15px rgba(0,0,0,0.05);
         }
 
         #encouragement-msg {
-            display: none; background-color: var(--primary-green); padding: 15px; border-radius: 10px;
-            text-align: center; margin-top: 20px; font-weight: 500; animation: fadeIn 0.5s ease;
-        }
-
-        .dashboard-summary {
-            background: var(--bg-color); padding: 20px; border-radius: 12px; margin-top: 20px; font-size: 16px; line-height: 1.6;
+            display: none; background: #caffbf; padding: 18px; border-radius: 14px;
+            text-align: center; margin-top: 25px; font-weight: 600; font-size: 18px;
+            animation: bounceIn 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
         }
 
         .hidden { display: none !important; }
@@ -133,11 +155,11 @@
     <div class="container" id="app-container">
         
         <div id="view-role-selection">
-            <h1>🌱 ยินดีต้อนรับสู่ MindU</h1>
-            <p class="text-center">ระบบติดตามและดูแลสุขภาพจิตของนักศึกษา</p>
+            <h1>🌈 ยินดีต้อนรับสู่ MindU</h1>
+            <p class="text-center" style="font-size: 18px; color: #6c757d;">ระบบติดตามและดูแลสุขภาพจิตของนักศึกษา</p>
             <div class="role-buttons">
-                <div class="role-card" onclick="switchView('view-student')">🎓 นักศึกษา (Student)</div>
-                <div class="role-card staff" onclick="switchView('view-staff')">👨‍🏫 อาจารย์ / บุคลากร (Staff)</div>
+                <div class="role-card" onclick="switchView('view-student')">🎓 นักศึกษา<br><span style="font-size: 16px; font-weight: normal;">(Student)</span></div>
+                <div class="role-card staff" onclick="switchView('view-staff')">👨‍🏫 อาจารย์ / บุคลากร<br><span style="font-size: 16px; font-weight: normal;">(Staff)</span></div>
             </div>
         </div>
 
@@ -145,10 +167,10 @@
             <button class="btn btn-back" onclick="switchView('view-role-selection')">⬅ กลับหน้าแรก</button>
             <h2>วันนี้ใจเป็นยังไงบ้าง? 💙</h2>
             
-            <label for="student-major">สาขาวิชาของคุณ:</label>
+            <label for="student-major" style="font-weight: 500; margin-bottom: 8px; display: block;">มหาวิทยาลัยราชภัฏจันทรเกษม:</label>
             <select id="student-major">
                 <optgroup label="คณะศึกษาศาสตร์">
-                    <option value="Computer Education" selected>สาขาวิชาคอมพิวเตอร์ศึกษา</option>
+                    <option value="Computer Education" selected>สาขาวิชาคอมพิวเตอร์ศึกษา (ComCru)</option>
                     <option value="Early Childhood Education">สาขาวิชาการศึกษาปฐมวัย</option>
                     <option value="Physical Education">สาขาวิชาพลศึกษา</option>
                 </optgroup>
@@ -159,28 +181,22 @@
                 </optgroup>
                 <optgroup label="คณะวิทยาการจัดการ">
                     <option value="Business Administration">สาขาวิชาบริหารธุรกิจ</option>
-                    <option value="Accounting">สาขาวิชาบัญชี</option>
                     <option value="Communication Arts">สาขาวิชานิเทศศาสตร์</option>
-                </optgroup>
-                <optgroup label="คณะมนุษยศาสตร์และสังคมศาสตร์">
-                    <option value="English">สาขาวิชาภาษาอังกฤษ</option>
-                    <option value="Public Administration">สาขาวิชารัฐประศาสนศาสตร์</option>
-                    <option value="Law">สาขาวิชานิติศาสตร์</option>
                 </optgroup>
             </select>
 
             <div class="mood-grid" id="mood-selector">
-                <button class="mood-btn" onclick="selectMood('ตัวมารดา', this)"><span class="emoji">🌊</span>ตัวมารดา</button>
-                <button class="mood-btn" onclick="selectMood('ว้าวุ่น', this)"><span class="emoji">🌀</span>ว้าวุ่น</button>
-                <button class="mood-btn" onclick="selectMood('ฉ่ำ', this)"><span class="emoji">💦</span>ฉ่ำ</button>
-                <button class="mood-btn" onclick="selectMood('นอยด์', this)"><span class="emoji">🌧️</span>นอยด์</button>
-                <button class="mood-btn" onclick="selectMood('จึ้ง', this)"><span class="emoji">🧊</span>จึ้ง</button>
-                <button class="mood-btn" onclick="selectMood('ขิต', this)"><span class="emoji">🚱</span>ขิต</button>
-                <button class="mood-btn" onclick="selectMood('จะเครซี่', this)"><span class="emoji">♨️</span>จะเครซี่</button>
-                <button class="mood-btn" onclick="selectMood('กี่โมง', this)"><span class="emoji">🫧</span>กี่โมง</button>
+                <button class="mood-btn" data-color="gold" onclick="selectMood('ตัวมารดา', this)"><span class="emoji">👑</span>ตัวมารดา</button>
+                <button class="mood-btn" data-color="green" onclick="selectMood('ว้าวุ่น', this)"><span class="emoji">😵‍💫</span>ว้าวุ่น</button>
+                <button class="mood-btn" data-color="pink" onclick="selectMood('ฉ่ำ', this)"><span class="emoji">✨</span>ฉ่ำ</button>
+                <button class="mood-btn" data-color="blue" onclick="selectMood('นอยด์', this)"><span class="emoji">😞</span>นอยด์</button>
+                <button class="mood-btn" data-color="orange" onclick="selectMood('จึ้ง', this)"><span class="emoji">🔥</span>จึ้ง</button>
+                <button class="mood-btn" data-color="dark" onclick="selectMood('ขิต', this)"><span class="emoji">💀</span>ขิต</button>
+                <button class="mood-btn" data-color="red" onclick="selectMood('จะเครซี่', this)"><span class="emoji">🤯</span>จะเครซี่</button>
+                <button class="mood-btn" data-color="cyan" onclick="selectMood('กี่โมง', this)"><span class="emoji">⏰</span>กี่โมง</button>
             </div>
 
-            <textarea id="student-note" placeholder="อยากระบายอะไรไหม? พิมพ์ทิ้งไว้ตรงนี้ได้เลยนะ..."></textarea>
+            <textarea id="student-note" placeholder="มีอะไรอยากระบาย พิมพ์ทิ้งไว้ตรงนี้ได้เลยนะ พื้นที่ปลอดภัยสำหรับคุณ..."></textarea>
             
             <button class="btn btn-primary" onclick="saveMood()">บันทึกใจไว้ 💌</button>
             <div id="encouragement-msg"></div>
@@ -198,22 +214,21 @@
 
         <div id="view-staff" class="hidden">
             <button class="btn btn-back" onclick="switchView('view-role-selection')">⬅ กลับหน้าแรก</button>
-            <h2>📊 ภาพรวมอารมณ์ของนักศึกษา (Real-time)</h2>
+            <h2>📊 Dashboard สุขภาพใจนักศึกษา</h2>
             
-            <label for="staff-filter-major">เลือกดูตามสาขาวิชา:</label>
+            <label for="staff-filter-major" style="font-weight: 500; margin-bottom: 8px; display: block;">กรองตามสาขาวิชา:</label>
             <select id="staff-filter-major" onchange="updateStaffDashboard()">
                 <option value="All">รวมทุกสาขาวิชา</option>
-                <option value="Computer Education">สาขาวิชาคอมพิวเตอร์ศึกษา</option>
+                <option value="Computer Education">สาขาวิชาคอมพิวเตอร์ศึกษา (ComCru)</option>
                 <option value="Information Technology">สาขาวิชาเทคโนโลยีสารสนเทศ</option>
                 <option value="Business Administration">สาขาวิชาบริหารธุรกิจ</option>
-                <option value="English">สาขาวิชาภาษาอังกฤษ</option>
-                </select>
+            </select>
 
             <div class="chart-container">
                 <canvas id="staffChart"></canvas>
             </div>
 
-            <div class="dashboard-summary" id="staff-summary">
+            <div class="stats-box" id="staff-summary" style="margin-top: 20px; background: white; border: 2px solid #ffc8dd;">
                 กำลังประมวลผลข้อมูล...
             </div>
         </div>
@@ -248,14 +263,15 @@
             "พรุ่งนี้เริ่มต้นใหม่นะ พักผ่อนเยอะๆ 💤",
             "ไม่ว่าวันนี้จะเจออะไรมา คุณทำดีที่สุดแล้ว 💙",
             "รอยยิ้มของคุณมีค่าเสมอ 😊",
-            "ให้เวลาตัวเองได้พักบ้างนะ 🍃"
+            "ให้เวลาตัวเองได้พักบ้างนะ 🍃",
+            "คุณเจ๋งที่สุดเลยรู้ตัวไหม! ✨"
         ];
 
         window.switchView = (viewId) => {
             document.getElementById('view-role-selection').classList.add('hidden');
             document.getElementById('view-student').classList.add('hidden');
             document.getElementById('view-staff').classList.add('hidden');
-            document.getElementById('student-stats-section').classList.add('hidden'); // ปิดสถิติทุกครั้งที่เปลี่ยนหน้า
+            document.getElementById('student-stats-section').classList.add('hidden'); 
             
             document.getElementById(viewId).classList.remove('hidden');
             if(viewId === 'view-staff') updateStaffDashboard();
@@ -265,6 +281,11 @@
             currentSelectedMood = moodName;
             document.querySelectorAll('.mood-btn').forEach(btn => btn.classList.remove('active'));
             btnElement.classList.add('active');
+        };
+
+        // ฟังก์ชันจุดพลุ
+        const fireConfetti = () => {
+            confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 }, colors: ['#a2d2ff', '#ffc8dd', '#cdb4db', '#fcf6bd'] });
         };
 
         window.saveMood = async () => {
@@ -279,6 +300,9 @@
                 timestamp: Date.now()
             };
 
+            // แสดงลูกเล่นพลุ
+            fireConfetti();
+
             const msgBox = document.getElementById('encouragement-msg');
             msgBox.innerText = encouragementMessages[Math.floor(Math.random() * encouragementMessages.length)];
             msgBox.style.display = 'block';
@@ -290,7 +314,6 @@
             try {
                 await addDoc(collection(db, "mood_records"), record);
             } catch (error) {
-                // Fallback กรณี Firebase Rules ยังไม่อนุญาต
                 appData.push(record);
                 if (!document.getElementById('student-stats-section').classList.contains('hidden')) updateStudentChart();
             }
@@ -309,20 +332,20 @@
         };
 
         window.updateStudentChart = () => {
-            // คำนวณจำนวนครั้งที่บันทึกในวันนี้
             const today = new Date().setHours(0,0,0,0);
             const recordsToday = appData.filter(d => new Date(d.timestamp).setHours(0,0,0,0) === today);
             
             document.getElementById('daily-stats').innerHTML = `
-                📅 วันนี้คุณบันทึกความรู้สึกไปแล้ว: <b>${recordsToday.length}</b> ครั้ง<br>
-                <span style="font-size:14px; color:var(--text-light);">อารมณ์ล่าสุด: ${recordsToday.length > 0 ? recordsToday[recordsToday.length-1].mood : '-'}</span>
+                📅 วันนี้คุณบันทึกความรู้สึกไปแล้ว: <b style="font-size: 24px;">${recordsToday.length}</b> ครั้ง<br>
+                <span style="font-size:16px; color:var(--text-main);">อารมณ์ล่าสุด: <b>${recordsToday.length > 0 ? recordsToday[recordsToday.length-1].mood : '-'}</b></span>
             `;
 
             const ctx = document.getElementById('studentChart').getContext('2d');
-            const recentData = appData.slice(-10); // ดู 10 ครั้งล่าสุด
+            const recentData = appData.slice(-10);
             const labels = recentData.map((d, i) => `ครั้งที่ ${i+1}`);
             const dataPoints = recentData.map(d => {
-                const moodScores = { 'ตัวมารดา':5, 'ฉ่ำ':4, 'จึ้ง':4, 'ว้าวุ่น':3, 'กี่โมง':3, 'นอยด์':2, 'จะเครซี่':2, 'ขิต':1 };
+                // ให้คะแนนกราฟตามระดับอารมณ์
+                const moodScores = { 'ตัวมารดา':5, 'ฉ่ำ':5, 'จึ้ง':4, 'ว้าวุ่น':3, 'กี่โมง':3, 'จะเครซี่':2, 'นอยด์':2, 'ขิต':1 };
                 return moodScores[d.mood] || 3;
             });
 
@@ -334,7 +357,8 @@
                     datasets: [{
                         label: 'ระดับพลังงานใจ (1=ขิต, 5=ตัวมารดา)',
                         data: dataPoints,
-                        borderColor: '#a2d2ff', backgroundColor: 'rgba(162, 210, 255, 0.2)', borderWidth: 2, tension: 0.3, fill: true
+                        borderColor: '#cdb4db', backgroundColor: 'rgba(205, 180, 219, 0.3)', 
+                        borderWidth: 3, tension: 0.4, fill: true, pointBackgroundColor: '#ffafcc', pointRadius: 5
                     }]
                 },
                 options: { responsive: true, scales: { y: { min: 0, max: 6 } } }
@@ -353,35 +377,41 @@
             const data = Object.values(moodCounts);
 
             if(staffChartInstance) staffChartInstance.destroy();
+            
+            // ใช้ Pie Chart หรือ Doughnut ให้ดูมีสีสันขึ้น
             staffChartInstance = new Chart(ctx, {
-                type: 'bar',
+                type: 'doughnut',
                 data: {
                     labels: labels,
-                    datasets: [{ label: 'จำนวนนักศึกษา', data: data, backgroundColor: ['#bde0fe', '#a2d2ff', '#cdb4db', '#ffc8dd'], borderRadius: 8 }]
+                    datasets: [{
+                        data: data,
+                        backgroundColor: ['#ffd6a5', '#caffbf', '#ffadad', '#a0c4ff', '#fdffb6', '#bdb2ff', '#ffc6ff', '#9bf6ff'],
+                        borderWidth: 2,
+                        hoverOffset: 10
+                    }]
                 },
-                options: { responsive: true, scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } } }
+                options: { responsive: true, plugins: { legend: { position: 'right' } } }
             });
 
             const summaryDiv = document.getElementById('staff-summary');
             if(filteredData.length === 0) {
-                summaryDiv.innerHTML = "<strong>สรุป:</strong> ยังไม่มีข้อมูลนักศึกษาในสาขานี้";
+                summaryDiv.innerHTML = "ยังไม่มีข้อมูลนักศึกษาในสาขานี้ครับ 🍃";
             } else {
                 let mostFrequentMood = labels.reduce((a, b) => moodCounts[a] > moodCounts[b] ? a : b);
                 summaryDiv.innerHTML = `
-                    <strong>💡 สรุปภาพรวมแบบ Real-time:</strong><br>
-                    จากการบันทึกทั้งหมด <b>${filteredData.length}</b> ครั้ง <br>
-                    พบว่าอารมณ์ส่วนใหญ่ตอนนี้คือ <b>"${mostFrequentMood}"</b> 
+                    <strong>💡 สรุปภาพรวมแบบ Real-time:</strong><br><br>
+                    มีการบันทึกทั้งหมด <b>${filteredData.length}</b> ครั้ง <br>
+                    อารมณ์ส่วนใหญ่ของนักศึกษาในกลุ่มนี้คือ: <b style="color: #ff006e; font-size: 20px;">"${mostFrequentMood}"</b> 
                 `;
             }
         };
 
-        // Real-time Listener ดึงข้อมูลสดๆ จาก Firebase
+        // Real-time Listener 
         const q = query(collection(db, "mood_records"), orderBy("timestamp", "asc"));
         onSnapshot(q, (snapshot) => {
             let firestoreData = [];
             snapshot.forEach((doc) => { firestoreData.push(doc.data()); });
             
-            // ถ้า Firebase ไม่มีข้อมูล ให้ใส่ข้อมูลจำลองไปก่อนเพื่อให้เห็นภาพกราฟ
             if(firestoreData.length === 0) {
                 appData = [
                     { mood: 'ฉ่ำ', major: 'Computer Education', note: '', timestamp: Date.now() - 86400000 },
@@ -392,11 +422,10 @@
                 appData = firestoreData;
             }
 
-            // สั่งอัปเดตกราฟอัตโนมัติถ้าเปิดหน้านั้นอยู่
             if (!document.getElementById('student-stats-section').classList.contains('hidden')) updateStudentChart();
             if (!document.getElementById('view-staff').classList.contains('hidden')) updateStaffDashboard();
         }, (error) => {
-            console.warn("Real-time Update Failed (Using Mock):", error.message);
+            console.warn("ใช้ระบบ Mock Data จำลองเนื่องจากไม่ได้เชื่อมต่อ:", error.message);
         });
 
     </script>
