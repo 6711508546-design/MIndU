@@ -9,13 +9,11 @@
 
     <style>
         :root {
-            /* โทนสีพาสเทล */
             --bg-color: #f0f7f4;
             --primary-blue: #a2d2ff;
             --primary-green: #bde0fe;
             --primary-purple: #cdb4db;
             --text-main: #3d405b;
-            --text-light: #6c757d;
             --white: #ffffff;
             --shadow: 0 4px 15px rgba(0,0,0,0.05);
         }
@@ -55,8 +53,8 @@
 
         h1, h2, h3 { text-align: center; margin-bottom: 20px; }
         .text-center { text-align: center; }
+        .mt-3 { margin-top: 20px; }
 
-        /* ส่วนของปุ่มทั่วไป */
         .btn {
             padding: 12px 24px;
             border: none;
@@ -67,7 +65,7 @@
             font-weight: 500;
         }
         
-        .btn-primary { background-color: var(--primary-blue); color: var(--text-main); }
+        .btn-primary { background-color: var(--primary-blue); color: var(--text-main); width: 100%; font-size: 18px; }
         .btn-primary:hover { background-color: #8ec0ef; transform: scale(1.02); }
         
         .btn-secondary { background-color: var(--primary-purple); color: var(--text-main); }
@@ -75,110 +73,58 @@
 
         .btn-back { background-color: #e9ecef; margin-bottom: 20px; }
 
-        /* หน้า Role Selection */
         .role-buttons {
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-top: 30px;
+            display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; margin-top: 30px;
         }
         .role-card {
-            flex: 1;
-            min-width: 250px;
-            padding: 40px 20px;
-            text-align: center;
-            border-radius: 15px;
-            cursor: pointer;
-            transition: 0.3s;
-            background-color: var(--primary-green);
-            font-size: 20px;
-            font-weight: 600;
+            flex: 1; min-width: 250px; padding: 40px 20px; text-align: center; border-radius: 15px; cursor: pointer;
+            transition: 0.3s; background-color: var(--primary-green); font-size: 20px; font-weight: 600;
         }
         .role-card:hover { transform: translateY(-5px); box-shadow: var(--shadow); }
         .role-card.staff { background-color: var(--primary-purple); }
 
-        /* หน้า Student View */
         .mood-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-            gap: 15px;
-            margin-bottom: 20px;
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 15px; margin-bottom: 20px;
         }
         
         .mood-btn {
-            background: var(--bg-color);
-            border: 2px solid transparent;
-            border-radius: 15px;
-            padding: 15px 10px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: 0.3s;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 5px;
+            background: var(--bg-color); border: 2px solid transparent; border-radius: 15px; padding: 15px 10px;
+            font-size: 16px; cursor: pointer; transition: 0.3s; display: flex; flex-direction: column; align-items: center; gap: 5px;
         }
         .mood-btn span.emoji { font-size: 32px; }
         .mood-btn:hover { background: var(--primary-blue); }
         .mood-btn.active {
-            border-color: var(--primary-purple);
-            background: var(--primary-blue);
-            box-shadow: 0 0 10px rgba(205, 180, 219, 0.5);
+            border-color: var(--primary-purple); background: var(--primary-blue); box-shadow: 0 0 10px rgba(205, 180, 219, 0.5);
         }
 
         textarea {
-            width: 100%;
-            height: 100px;
-            padding: 15px;
-            border: 2px solid #e9ecef;
-            border-radius: 12px;
-            resize: none;
-            font-size: 16px;
-            margin-bottom: 20px;
-            outline: none;
-            transition: 0.3s;
+            width: 100%; height: 100px; padding: 15px; border: 2px solid #e9ecef; border-radius: 12px; resize: none;
+            font-size: 16px; margin-bottom: 20px; outline: none; transition: 0.3s;
         }
         textarea:focus { border-color: var(--primary-blue); }
 
         select {
-            width: 100%;
-            padding: 12px;
-            border-radius: 10px;
-            border: 1px solid #ccc;
-            margin-bottom: 20px;
-            font-size: 16px;
+            width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #ccc; margin-bottom: 20px; font-size: 16px;
         }
 
         .chart-container {
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 2px dashed #e9ecef;
+            margin-top: 30px; padding-top: 20px; border-top: 2px dashed #e9ecef; animation: fadeIn 0.5s ease;
         }
 
-        /* Message Box */
+        .stats-box {
+            background-color: var(--primary-green); padding: 15px; border-radius: 10px; text-align: center;
+            margin-bottom: 20px; font-size: 16px; font-weight: 500;
+        }
+
         #encouragement-msg {
-            display: none;
-            background-color: var(--primary-green);
-            padding: 15px;
-            border-radius: 10px;
-            text-align: center;
-            margin-top: 20px;
-            font-weight: 500;
-            animation: fadeIn 0.5s ease;
+            display: none; background-color: var(--primary-green); padding: 15px; border-radius: 10px;
+            text-align: center; margin-top: 20px; font-weight: 500; animation: fadeIn 0.5s ease;
         }
 
-        /* Dashboard View */
         .dashboard-summary {
-            background: var(--bg-color);
-            padding: 20px;
-            border-radius: 12px;
-            margin-top: 20px;
-            font-size: 16px;
-            line-height: 1.6;
+            background: var(--bg-color); padding: 20px; border-radius: 12px; margin-top: 20px; font-size: 16px; line-height: 1.6;
         }
 
-        /* Utilities */
         .hidden { display: none !important; }
     </style>
 </head>
@@ -190,12 +136,8 @@
             <h1>🌱 ยินดีต้อนรับสู่ MindU</h1>
             <p class="text-center">ระบบติดตามและดูแลสุขภาพจิตของนักศึกษา</p>
             <div class="role-buttons">
-                <div class="role-card" onclick="switchView('view-student')">
-                    🎓 นักศึกษา (Student)
-                </div>
-                <div class="role-card staff" onclick="switchView('view-staff')">
-                    👨‍🏫 อาจารย์ / บุคลากร (Staff)
-                </div>
+                <div class="role-card" onclick="switchView('view-student')">🎓 นักศึกษา (Student)</div>
+                <div class="role-card staff" onclick="switchView('view-staff')">👨‍🏫 อาจารย์ / บุคลากร (Staff)</div>
             </div>
         </div>
 
@@ -205,15 +147,31 @@
             
             <label for="student-major">สาขาวิชาของคุณ:</label>
             <select id="student-major">
-                <option value="Computer Education">คอมพิวเตอร์ศึกษา</option>
-                <option value="Information Technology">เทคโนโลยีสารสนเทศ</option>
-                <option value="Science">วิทยาศาสตร์</option>
-                <option value="Arts">ศิลปศาสตร์</option>
+                <optgroup label="คณะศึกษาศาสตร์">
+                    <option value="Computer Education" selected>สาขาวิชาคอมพิวเตอร์ศึกษา</option>
+                    <option value="Early Childhood Education">สาขาวิชาการศึกษาปฐมวัย</option>
+                    <option value="Physical Education">สาขาวิชาพลศึกษา</option>
+                </optgroup>
+                <optgroup label="คณะวิทยาศาสตร์">
+                    <option value="Information Technology">สาขาวิชาเทคโนโลยีสารสนเทศ</option>
+                    <option value="Computer Science">สาขาวิชาวิทยาการคอมพิวเตอร์</option>
+                    <option value="Data Science">สาขาวิชาวิทยาการข้อมูล</option>
+                </optgroup>
+                <optgroup label="คณะวิทยาการจัดการ">
+                    <option value="Business Administration">สาขาวิชาบริหารธุรกิจ</option>
+                    <option value="Accounting">สาขาวิชาบัญชี</option>
+                    <option value="Communication Arts">สาขาวิชานิเทศศาสตร์</option>
+                </optgroup>
+                <optgroup label="คณะมนุษยศาสตร์และสังคมศาสตร์">
+                    <option value="English">สาขาวิชาภาษาอังกฤษ</option>
+                    <option value="Public Administration">สาขาวิชารัฐประศาสนศาสตร์</option>
+                    <option value="Law">สาขาวิชานิติศาสตร์</option>
+                </optgroup>
             </select>
 
             <div class="mood-grid" id="mood-selector">
-                <button class="mood-btn" onclick="selectMood('ตัวมารดา', this)"><span class="emoji">💧</span>ตัวมารดา</button>
-                <button class="mood-btn" onclick="selectMood('ว้าวุ่น', this)"><span class="emoji">🌊</span>ว้าวุ่น</button>
+                <button class="mood-btn" onclick="selectMood('ตัวมารดา', this)"><span class="emoji">🌊</span>ตัวมารดา</button>
+                <button class="mood-btn" onclick="selectMood('ว้าวุ่น', this)"><span class="emoji">🌀</span>ว้าวุ่น</button>
                 <button class="mood-btn" onclick="selectMood('ฉ่ำ', this)"><span class="emoji">💦</span>ฉ่ำ</button>
                 <button class="mood-btn" onclick="selectMood('นอยด์', this)"><span class="emoji">🌧️</span>นอยด์</button>
                 <button class="mood-btn" onclick="selectMood('จึ้ง', this)"><span class="emoji">🧊</span>จึ้ง</button>
@@ -224,30 +182,32 @@
 
             <textarea id="student-note" placeholder="อยากระบายอะไรไหม? พิมพ์ทิ้งไว้ตรงนี้ได้เลยนะ..."></textarea>
             
-            <div class="text-center">
-                <button class="btn btn-primary" onclick="saveMood()" style="width: 100%; font-size: 18px;">บันทึกใจไว้ 💌</button>
-            </div>
-
+            <button class="btn btn-primary" onclick="saveMood()">บันทึกใจไว้ 💌</button>
             <div id="encouragement-msg"></div>
 
-            <div class="chart-container">
-                <h3>📈 กราฟอารมณ์ของคุณที่ผ่านมา</h3>
+            <div class="text-center mt-3">
+                <button class="btn btn-secondary" onclick="toggleStudentStats()">ดูสถิติของฉัน 📊</button>
+            </div>
+
+            <div id="student-stats-section" class="hidden chart-container">
+                <h3>📈 สถิติอารมณ์ของคุณ</h3>
+                <div id="daily-stats" class="stats-box">กำลังโหลดข้อมูล...</div>
                 <canvas id="studentChart"></canvas>
             </div>
         </div>
 
         <div id="view-staff" class="hidden">
             <button class="btn btn-back" onclick="switchView('view-role-selection')">⬅ กลับหน้าแรก</button>
-            <h2>📊 ภาพรวมอารมณ์ของนักศึกษา</h2>
+            <h2>📊 ภาพรวมอารมณ์ของนักศึกษา (Real-time)</h2>
             
             <label for="staff-filter-major">เลือกดูตามสาขาวิชา:</label>
             <select id="staff-filter-major" onchange="updateStaffDashboard()">
-                <option value="All">ทุกสาขาวิชา</option>
-                <option value="Computer Education">คอมพิวเตอร์ศึกษา</option>
-                <option value="Information Technology">เทคโนโลยีสารสนเทศ</option>
-                <option value="Science">วิทยาศาสตร์</option>
-                <option value="Arts">ศิลปศาสตร์</option>
-            </select>
+                <option value="All">รวมทุกสาขาวิชา</option>
+                <option value="Computer Education">สาขาวิชาคอมพิวเตอร์ศึกษา</option>
+                <option value="Information Technology">สาขาวิชาเทคโนโลยีสารสนเทศ</option>
+                <option value="Business Administration">สาขาวิชาบริหารธุรกิจ</option>
+                <option value="English">สาขาวิชาภาษาอังกฤษ</option>
+                </select>
 
             <div class="chart-container">
                 <canvas id="staffChart"></canvas>
@@ -262,10 +222,9 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, query, orderBy } 
+        import { getFirestore, collection, addDoc, onSnapshot, query, orderBy } 
         from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
-        // ตั้งค่า Firebase ตามที่คุณให้มา
         const firebaseConfig = {
             apiKey: "AIzaSyDiUc6y2M5FCu-tEnY1mgYGgVhu7H-PFnE",
             authDomain: "mindu-9f4b0.firebaseapp.com",
@@ -279,21 +238,11 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // ================= Mock Data สำหรับเริ่มต้นและเป็น Fallback =================
-        let appData = [
-            { mood: 'ฉ่ำ', major: 'Computer Education', note: '', timestamp: Date.now() - 86400000 * 2 },
-            { mood: 'นอยด์', major: 'Information Technology', note: '', timestamp: Date.now() - 86400000 },
-            { mood: 'จะเครซี่', major: 'Computer Education', note: '', timestamp: Date.now() - 3600000 },
-            { mood: 'ตัวมารดา', major: 'Science', note: '', timestamp: Date.now() },
-            { mood: 'ว้าวุ่น', major: 'Computer Education', note: '', timestamp: Date.now() }
-        ];
-
-        // ตัวแปร State
+        let appData = [];
         let currentSelectedMood = "";
         let studentChartInstance = null;
         let staffChartInstance = null;
 
-        // ข้อความให้กำลังใจแบบสุ่ม
         const encouragementMessages = [
             "เก่งมากเลยที่ผ่านวันนี้มาได้! 🌟",
             "พรุ่งนี้เริ่มต้นใหม่นะ พักผ่อนเยอะๆ 💤",
@@ -302,178 +251,153 @@
             "ให้เวลาตัวเองได้พักบ้างนะ 🍃"
         ];
 
-        // ================= ฟังก์ชันการทำงานฝั่ง Frontend =================
-
-        // 1. ระบบเปลี่ยนหน้า (Router)
         window.switchView = (viewId) => {
             document.getElementById('view-role-selection').classList.add('hidden');
             document.getElementById('view-student').classList.add('hidden');
             document.getElementById('view-staff').classList.add('hidden');
+            document.getElementById('student-stats-section').classList.add('hidden'); // ปิดสถิติทุกครั้งที่เปลี่ยนหน้า
             
             document.getElementById(viewId).classList.remove('hidden');
-
-            if(viewId === 'view-student') updateStudentChart();
             if(viewId === 'view-staff') updateStaffDashboard();
         };
 
-        // 2. ฟังก์ชันเลือกอารมณ์
         window.selectMood = (moodName, btnElement) => {
             currentSelectedMood = moodName;
-            // ลบสถานะ active จากปุ่มทั้งหมด
-            const buttons = document.querySelectorAll('.mood-btn');
-            buttons.forEach(btn => btn.classList.remove('active'));
-            // เพิ่มสถานะ active ให้ปุ่มที่เลือก
+            document.querySelectorAll('.mood-btn').forEach(btn => btn.classList.remove('active'));
             btnElement.classList.add('active');
         };
 
-        // 3. ฟังก์ชันบันทึกข้อมูล
         window.saveMood = async () => {
             if (!currentSelectedMood) {
-                alert("กรุณาเลือกอารมณ์ของวันนี้ก่อนบันทึกนะ 😊");
-                return;
+                alert("กรุณาเลือกอารมณ์ของวันนี้ก่อนบันทึกนะ 😊"); return;
             }
 
-            const major = document.getElementById('student-major').value;
-            const note = document.getElementById('student-note').value;
             const record = {
                 mood: currentSelectedMood,
-                major: major,
-                note: note,
+                major: document.getElementById('student-major').value,
+                note: document.getElementById('student-note').value,
                 timestamp: Date.now()
             };
 
-            // แสดงข้อความให้กำลังใจ
             const msgBox = document.getElementById('encouragement-msg');
             msgBox.innerText = encouragementMessages[Math.floor(Math.random() * encouragementMessages.length)];
             msgBox.style.display = 'block';
 
-            // เพิ่มข้อมูลลงใน Local Array (Mock Update)
-            appData.push(record);
-            
-            // รีเซ็ตฟอร์ม
             document.getElementById('student-note').value = "";
             document.querySelectorAll('.mood-btn').forEach(btn => btn.classList.remove('active'));
             currentSelectedMood = "";
 
-            // อัปเดตกราฟฝั่งนักศึกษาทันที
-            updateStudentChart();
-
-            // พยายามบันทึกลง Firebase (ใช้ Try-Catch เพื่อไม่ให้ระบบค้างถ้ายังไม่ได้ตั้งค่า Rules)
             try {
                 await addDoc(collection(db, "mood_records"), record);
-                console.log("บันทึกลง Firebase สำเร็จ");
             } catch (error) {
-                console.warn("ไม่สามารถบันทึกลง Firebase ได้ (กำลังใช้ Mock Data ภายใน):", error.message);
+                // Fallback กรณี Firebase Rules ยังไม่อนุญาต
+                appData.push(record);
+                if (!document.getElementById('student-stats-section').classList.contains('hidden')) updateStudentChart();
             }
 
             setTimeout(() => { msgBox.style.display = 'none'; }, 5000);
         };
 
-        // ================= ระบบจัดการกราฟ (Chart.js) =================
+        window.toggleStudentStats = () => {
+            const statsSection = document.getElementById('student-stats-section');
+            if (statsSection.classList.contains('hidden')) {
+                statsSection.classList.remove('hidden');
+                updateStudentChart();
+            } else {
+                statsSection.classList.add('hidden');
+            }
+        };
 
-        // อัปเดตกราฟนักศึกษา (Line Chart ประวัติอารมณ์)
         window.updateStudentChart = () => {
-            const ctx = document.getElementById('studentChart').getContext('2d');
+            // คำนวณจำนวนครั้งที่บันทึกในวันนี้
+            const today = new Date().setHours(0,0,0,0);
+            const recordsToday = appData.filter(d => new Date(d.timestamp).setHours(0,0,0,0) === today);
             
-            // ดึงข้อมูล 7 รายการล่าสุดมาโชว์
-            const recentData = appData.slice(-7);
+            document.getElementById('daily-stats').innerHTML = `
+                📅 วันนี้คุณบันทึกความรู้สึกไปแล้ว: <b>${recordsToday.length}</b> ครั้ง<br>
+                <span style="font-size:14px; color:var(--text-light);">อารมณ์ล่าสุด: ${recordsToday.length > 0 ? recordsToday[recordsToday.length-1].mood : '-'}</span>
+            `;
+
+            const ctx = document.getElementById('studentChart').getContext('2d');
+            const recentData = appData.slice(-10); // ดู 10 ครั้งล่าสุด
             const labels = recentData.map((d, i) => `ครั้งที่ ${i+1}`);
             const dataPoints = recentData.map(d => {
-                // ให้คะแนนอารมณ์คร่าวๆ เพื่อพล็อตกราฟ
                 const moodScores = { 'ตัวมารดา':5, 'ฉ่ำ':4, 'จึ้ง':4, 'ว้าวุ่น':3, 'กี่โมง':3, 'นอยด์':2, 'จะเครซี่':2, 'ขิต':1 };
                 return moodScores[d.mood] || 3;
             });
 
             if(studentChartInstance) studentChartInstance.destroy();
-
             studentChartInstance = new Chart(ctx, {
                 type: 'line',
                 data: {
                     labels: labels,
                     datasets: [{
-                        label: 'ระดับพลังงานใจ (1-5)',
+                        label: 'ระดับพลังงานใจ (1=ขิต, 5=ตัวมารดา)',
                         data: dataPoints,
-                        borderColor: '#a2d2ff',
-                        backgroundColor: 'rgba(162, 210, 255, 0.2)',
-                        borderWidth: 2,
-                        tension: 0.3,
-                        fill: true
+                        borderColor: '#a2d2ff', backgroundColor: 'rgba(162, 210, 255, 0.2)', borderWidth: 2, tension: 0.3, fill: true
                     }]
                 },
                 options: { responsive: true, scales: { y: { min: 0, max: 6 } } }
             });
         };
 
-        // อัปเดตกราฟและ Dashboard ฝั่งอาจารย์ (Bar Chart สัดส่วนอารมณ์)
         window.updateStaffDashboard = () => {
             const selectedMajor = document.getElementById('staff-filter-major').value;
             const ctx = document.getElementById('staffChart').getContext('2d');
 
-            // กรองข้อมูลตามสาขา
-            const filteredData = selectedMajor === 'All' 
-                ? appData 
-                : appData.filter(d => d.major === selectedMajor);
-
-            // นับจำนวนอารมณ์แต่ละประเภท
+            const filteredData = selectedMajor === 'All' ? appData : appData.filter(d => d.major === selectedMajor);
             const moodCounts = {};
-            filteredData.forEach(d => {
-                moodCounts[d.mood] = (moodCounts[d.mood] || 0) + 1;
-            });
+            filteredData.forEach(d => { moodCounts[d.mood] = (moodCounts[d.mood] || 0) + 1; });
 
             const labels = Object.keys(moodCounts);
             const data = Object.values(moodCounts);
 
             if(staffChartInstance) staffChartInstance.destroy();
-
             staffChartInstance = new Chart(ctx, {
                 type: 'bar',
                 data: {
                     labels: labels,
-                    datasets: [{
-                        label: 'จำนวนนักศึกษา',
-                        data: data,
-                        backgroundColor: ['#bde0fe', '#a2d2ff', '#cdb4db', '#ffc8dd', '#ffafcc'],
-                        borderRadius: 8
-                    }]
+                    datasets: [{ label: 'จำนวนนักศึกษา', data: data, backgroundColor: ['#bde0fe', '#a2d2ff', '#cdb4db', '#ffc8dd'], borderRadius: 8 }]
                 },
                 options: { responsive: true, scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } } }
             });
 
-            // สร้างข้อความสรุปอัตโนมัติ
             const summaryDiv = document.getElementById('staff-summary');
             if(filteredData.length === 0) {
                 summaryDiv.innerHTML = "<strong>สรุป:</strong> ยังไม่มีข้อมูลนักศึกษาในสาขานี้";
             } else {
                 let mostFrequentMood = labels.reduce((a, b) => moodCounts[a] > moodCounts[b] ? a : b);
                 summaryDiv.innerHTML = `
-                    <strong>💡 สรุปภาพรวม:</strong><br>
-                    จากการประเมินของนักศึกษาจำนวน <b>${filteredData.length}</b> รายการ (สาขา: ${selectedMajor === 'All' ? 'ทั้งหมด' : selectedMajor}) <br>
-                    พบว่าอารมณ์ส่วนใหญ่ของนักศึกษาในขณะนี้คือ <b>"${mostFrequentMood}"</b> 
-                    ขอแนะนำให้อาจารย์คอยสังเกตและให้คำปรึกษาอย่างใกล้ชิดครับ
+                    <strong>💡 สรุปภาพรวมแบบ Real-time:</strong><br>
+                    จากการบันทึกทั้งหมด <b>${filteredData.length}</b> ครั้ง <br>
+                    พบว่าอารมณ์ส่วนใหญ่ตอนนี้คือ <b>"${mostFrequentMood}"</b> 
                 `;
             }
         };
 
-        // เริ่มต้นโหลดข้อมูลจาก Firebase (ถ้ามี)
-        const loadFirebaseData = async () => {
-            try {
-                const querySnapshot = await getDocs(collection(db, "mood_records"));
-                if (!querySnapshot.empty) {
-                    let firestoreData = [];
-                    querySnapshot.forEach((doc) => {
-                        firestoreData.push(doc.data());
-                    });
-                    // รวมข้อมูลหรือแทนที่ Mock Data
-                    appData = firestoreData;
-                    console.log("โหลดข้อมูลจาก Firebase เรียบร้อย");
-                }
-            } catch (error) {
-                console.warn("ไม่สามารถดึงข้อมูล Firebase ได้ ใช้ Mock Data ต่อไป:", error.message);
+        // Real-time Listener ดึงข้อมูลสดๆ จาก Firebase
+        const q = query(collection(db, "mood_records"), orderBy("timestamp", "asc"));
+        onSnapshot(q, (snapshot) => {
+            let firestoreData = [];
+            snapshot.forEach((doc) => { firestoreData.push(doc.data()); });
+            
+            // ถ้า Firebase ไม่มีข้อมูล ให้ใส่ข้อมูลจำลองไปก่อนเพื่อให้เห็นภาพกราฟ
+            if(firestoreData.length === 0) {
+                appData = [
+                    { mood: 'ฉ่ำ', major: 'Computer Education', note: '', timestamp: Date.now() - 86400000 },
+                    { mood: 'นอยด์', major: 'Computer Education', note: '', timestamp: Date.now() - 3600000 },
+                    { mood: 'ตัวมารดา', major: 'Information Technology', note: '', timestamp: Date.now() }
+                ];
+            } else {
+                appData = firestoreData;
             }
-        };
 
-        // เรียกโหลดข้อมูลตอนเปิดเว็บ
-        loadFirebaseData();
+            // สั่งอัปเดตกราฟอัตโนมัติถ้าเปิดหน้านั้นอยู่
+            if (!document.getElementById('student-stats-section').classList.contains('hidden')) updateStudentChart();
+            if (!document.getElementById('view-staff').classList.contains('hidden')) updateStaffDashboard();
+        }, (error) => {
+            console.warn("Real-time Update Failed (Using Mock):", error.message);
+        });
 
     </script>
 </body>
