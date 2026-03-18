@@ -1,0 +1,124 @@
+/* โทนสีพาสเทลตามกำหนด */
+:root {
+    --pastel-blue: #aec6cf;
+    --pastel-green: #b2e2b2;
+    --pastel-purple: #c3b1e1;
+    --bg-color: #fcfbfe;
+    --text-dark: #4a4a4a;
+    --card-bg: #ffffff;
+}
+
+* { box-sizing: border-box; font-family: 'Prompt', sans-serif; margin: 0; padding: 0; }
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-dark);
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+}
+
+.container {
+    width: 100%;
+    max-width: 600px;
+    background-color: var(--card-bg);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    min-height: 100vh;
+    position: relative;
+}
+
+/* ส่วนหัวของแอป */
+header {
+    background: linear-gradient(135deg, var(--pastel-purple), var(--pastel-blue));
+    color: white;
+    padding: 20px;
+    text-align: center;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+    position: relative;
+}
+
+.back-btn {
+    position: absolute;
+    left: 20px;
+    top: 25px;
+    background: rgba(255,255,255,0.3);
+    border: none;
+    color: white;
+    padding: 5px 15px;
+    border-radius: 15px;
+    cursor: pointer;
+    display: none;
+}
+
+.content { padding: 20px; }
+
+/* จัดการการแสดงผลของแต่ละหน้า */
+.view { display: none; animation: fadeIn 0.4s; }
+.view.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+/* หน้าเลือก Role */
+.role-btn {
+    width: 100%; padding: 20px; margin-bottom: 15px;
+    font-size: 1.2rem; border: none; border-radius: 15px;
+    cursor: pointer; transition: 0.3s;
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+}
+.btn-student { background-color: var(--pastel-blue); color: white; }
+.btn-staff { background-color: var(--pastel-purple); color: white; }
+.role-btn:hover { filter: brightness(0.95); transform: scale(1.02); }
+
+/* หน้า Student */
+h3 { margin-bottom: 15px; text-align: center; color: var(--text-dark); }
+.emotions-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px;
+}
+@media (max-width: 400px) { .emotions-grid { grid-template-columns: repeat(3, 1fr); } }
+
+.emotion-item {
+    background-color: #f5f5f5; border: 2px solid transparent;
+    border-radius: 15px; padding: 15px 5px; text-align: center;
+    cursor: pointer; transition: 0.2s;
+}
+.emotion-item.selected {
+    background-color: #f0e6ff; border-color: var(--pastel-purple); transform: scale(1.05);
+}
+.emoji { font-size: 2rem; display: block; margin-bottom: 5px; }
+.emoji-label { font-size: 0.8rem; font-weight: 500; }
+
+textarea {
+    width: 100%; height: 100px; padding: 15px; border-radius: 15px;
+    border: 1px solid #ddd; resize: none; margin-bottom: 15px;
+    background-color: #fdfdfd; font-size: 0.95rem;
+}
+textarea:focus { outline: none; border-color: var(--pastel-purple); }
+
+.btn-submit {
+    width: 100%; padding: 15px; background-color: var(--pastel-green);
+    color: #2d5a2d; font-size: 1.1rem; font-weight: 600;
+    border: none; border-radius: 25px; cursor: pointer; transition: 0.3s;
+}
+.btn-submit:hover { filter: brightness(0.95); box-shadow: 0 5px 15px rgba(178, 226, 178, 0.4); }
+
+/* Notification Message */
+.msg-box {
+    display: none; padding: 15px; margin-top: 15px;
+    border-radius: 10px; text-align: center; font-weight: 500;
+    background-color: #fff3cd; color: #856404;
+}
+
+/* ส่วนของกราฟและ History */
+.chart-container { margin-top: 30px; padding: 15px; background: white; border-radius: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+.history-list { margin-top: 15px; max-height: 200px; overflow-y: auto; }
+.history-item { padding: 10px; border-bottom: 1px solid #eee; font-size: 0.9rem; display: flex; justify-content: space-between; align-items: center; }
+
+/* หน้า Staff Dashboard */
+.filter-group { margin-bottom: 20px; display: flex; gap: 10px; }
+select, input[type="date"] {
+    flex: 1; padding: 10px; border-radius: 10px; border: 1px solid #ddd; font-family: 'Prompt';
+}
+.summary-box {
+    background-color: #f0f8ff; padding: 15px; border-radius: 10px; margin-bottom: 20px; font-size: 0.95rem; border-left: 5px solid var(--pastel-blue);
+}
+.dashboard-charts { display: flex; flex-direction: column; gap: 20px; }
