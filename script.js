@@ -1,4 +1,4 @@
-// ================= JavaScript: ระบบและฐานข้อมูล Firebase =================
+// ================= JavaScript: ระบบและฐานข้อมูล =================
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
 import { getFirestore, collection, addDoc, onSnapshot, query, orderBy } 
 from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
@@ -25,7 +25,7 @@ const moodEmojiMap = {
     'จึ้ง': '🔥', 'ขิต': '💀', 'จะเครซี่': '🤯', 'กี่โมง': '⏰' 
 };
 
-// ฟังก์ชันเข้าหน้าอาจารย์ (ซ่อนคำใบ้รหัสผ่าน)
+// นำคำใบ้รหัสผ่านออก เพื่อความปลอดภัย
 window.enterStaffView = () => {
     const pin = prompt("🔐 กรุณาใส่รหัสผ่านเพื่อเข้าสู่ระบบของบุคลากร:");
     if (pin === "20043") {
@@ -236,8 +236,4 @@ onSnapshot(q, (snapshot) => {
     }
 }, (error) => { 
     console.warn("ระบบเชื่อมต่อจำลองทำงาน:", error.message); 
-});
-    if (!document.getElementById('view-staff').classList.contains('hidden')) updateStaffDashboard();
-}, (error) => {
-    console.warn("ใช้ระบบ Mock Data จำลองเนื่องจากไม่ได้เชื่อมต่อ:", error.message);
 });
