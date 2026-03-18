@@ -3,449 +3,485 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MindU - ระบบติดตามดูแลสุขภาพจิตนักศึกษา</title>
-    
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💙</text></svg>">
-    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <title>MindU - ระบบติดตามสุขภาพใจ</title>
+    
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    
     <style>
+        /* CSS โทนสีพาสเทลและ Responsive */
+        @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600&display=swap');
+        
         :root {
-            --text-main: #2b2d42; --white: #ffffff; --shadow: 0 10px 25px rgba(0,0,0,0.08);
-            --glass-bg: rgba(255, 255, 255, 0.95); --primary-blue: #a2d2ff;
+            --primary: #A2D2FF;
+            --secondary: #BDE0FE;
+            --accent: #FFAFCC;
+            --text-dark: #4A4A4A;
+            --bg-light: #F8F9FA;
+            --white: #FFFFFF;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Kanit', sans-serif; }
+        * {
+            box-sizing: border-box;
+            font-family: 'Prompt', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
 
         body {
-            background: linear-gradient(-45deg, #ffc8dd, #bde0fe, #cdb4db, #ffffb5);
-            background-size: 400% 400%; animation: gradientBG 15s ease infinite;
-            color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 20px;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
         }
-        @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
 
         .container {
-            width: 100%; max-width: 800px; background: var(--glass-bg); backdrop-filter: blur(10px);
-            border-radius: 24px; box-shadow: var(--shadow); padding: 35px; margin-top: 10px;
-            animation: bounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55); border: 2px solid rgba(255, 255, 255, 0.5);
+            background: var(--white);
+            width: 100%;
+            max-width: 600px;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            display: none; /* ซ่อนทุกหน้าไว้ก่อน */
         }
-        @keyframes bounceIn { 0% { transform: scale(0.9); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
 
-        h1, h2, h3, h4 { text-align: center; margin-bottom: 20px; }
-        .text-center { text-align: center; } .mt-3 { margin-top: 20px; } .mt-4 { margin-top: 35px; }
-
-        .btn { padding: 14px 28px; border: none; border-radius: 16px; font-size: 16px; cursor: pointer; transition: 0.3s; font-weight: 600; }
-        .btn-primary { background: linear-gradient(135deg, #a2d2ff, #bde0fe); color: var(--text-main); width: 100%; font-size: 18px; box-shadow: 0 4px 15px rgba(162, 210, 255, 0.4); }
-        .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(162, 210, 255, 0.6); }
-        .btn-secondary { background: linear-gradient(135deg, #cdb4db, #ffc8dd); color: var(--text-main); }
-        .btn-secondary:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(205, 180, 219, 0.5); }
-        .btn-back { background: #f8f9fa; margin-bottom: 25px; border: 1px solid #dee2e6; }
-        .btn-back:hover { background: #e9ecef; transform: translateX(-5px); }
-
-        .role-buttons { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; margin-top: 40px; }
-        .role-card {
-            flex: 1; min-width: 250px; padding: 50px 20px; text-align: center; border-radius: 20px; cursor: pointer;
-            transition: 0.4s; background: linear-gradient(135deg, #bde0fe, #a2d2ff); font-size: 22px; font-weight: 600; border: 3px solid white; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        .active-screen {
+            display: block; /* แสดงเฉพาะหน้าที่มีคลาสนี้ */
         }
-        .role-card.staff { background: linear-gradient(135deg, #ffc8dd, #ffafcc); }
-        .role-card:hover { transform: translateY(-10px); box-shadow: 0 15px 30px rgba(0,0,0,0.15); }
 
-        .mood-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 15px; margin-bottom: 25px; }
+        h1, h2 {
+            text-align: center;
+            color: #6C757D;
+            margin-bottom: 20px;
+        }
+
+        .logo {
+            font-size: 3rem;
+            text-align: center;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        /* ปุ่มและ Form */
+        button {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 15px;
+        }
+
+        .btn-primary { background: var(--primary); color: #fff; }
+        .btn-primary:hover { background: #8bc1f5; }
+        
+        .btn-accent { background: var(--accent); color: #fff; }
+        .btn-accent:hover { background: #f79abd; }
+        
+        .btn-back { background: #E9ECEF; color: #495057; }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #E9ECEF;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            font-size: 16px;
+            outline: none;
+        }
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--primary);
+        }
+
+        /* ปุ่มอารมณ์ */
+        .mood-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
         .mood-btn {
-            background: var(--white); border: 3px solid #f8f9fa; border-radius: 20px; padding: 15px 10px;
-            font-size: 17px; font-weight: 500; cursor: pointer; transition: 0.3s; display: flex; flex-direction: column; align-items: center; gap: 8px;
+            background: var(--bg-light);
+            border: 2px solid transparent;
+            padding: 10px;
+            border-radius: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.2s;
         }
-        .mood-btn span.emoji { font-size: 38px; transition: 0.3s; }
-        .mood-btn:hover { transform: translateY(-5px); } .mood-btn:hover span.emoji { transform: scale(1.2); }
 
-        .mood-btn[data-color="gold"].active { border-color: #ffd6a5; background: #fff9f0; box-shadow: 0 5px 15px rgba(255,214,165,0.5); }
-        .mood-btn[data-color="green"].active { border-color: #caffbf; background: #f2fcf1; box-shadow: 0 5px 15px rgba(202,255,191,0.5); }
-        .mood-btn[data-color="pink"].active { border-color: #ffadad; background: #fff0f0; box-shadow: 0 5px 15px rgba(255,173,173,0.5); }
-        .mood-btn[data-color="blue"].active { border-color: #a0c4ff; background: #f0f5ff; box-shadow: 0 5px 15px rgba(160,196,255,0.5); }
-        .mood-btn[data-color="orange"].active { border-color: #fdffb6; background: #fffff0; box-shadow: 0 5px 15px rgba(253,255,182,0.5); }
-        .mood-btn[data-color="dark"].active { border-color: #bdb2ff; background: #f6f5ff; box-shadow: 0 5px 15px rgba(189,178,255,0.5); }
-        .mood-btn[data-color="red"].active { border-color: #ffc6ff; background: #fff5ff; box-shadow: 0 5px 15px rgba(255,198,255,0.5); }
-        .mood-btn[data-color="cyan"].active { border-color: #9bf6ff; background: #f0fdff; box-shadow: 0 5px 15px rgba(155,246,255,0.5); }
+        .mood-btn:hover { background: var(--secondary); }
+        .mood-btn.selected {
+            background: var(--secondary);
+            border-color: var(--primary);
+            transform: scale(1.05);
+        }
 
-        textarea, select { width: 100%; padding: 15px; border-radius: 14px; border: 2px solid #e9ecef; font-size: 16px; outline: none; transition: 0.3s; background: white; }
-        textarea { height: 110px; resize: none; margin-bottom: 20px; }
-        textarea:focus, select:focus { border-color: #a2d2ff; }
-        select { margin-bottom: 25px; cursor: pointer; }
+        .mood-emoji { font-size: 24px; display: block; margin-bottom: 5px; }
 
-        .chart-container { margin-top: 35px; padding-top: 25px; border-top: 2px dashed #cdb4db; background: white; border-radius: 20px; padding: 20px; box-shadow: var(--shadow); width: 100%; overflow: hidden; }
-        .stats-box { background: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%); color: var(--text-main); padding: 20px; border-radius: 16px; text-align: center; margin-bottom: 25px; font-size: 18px; font-weight: 500; border: 2px solid white; }
+        /* การ์ดประวัติ (Student History) */
+        .history-card {
+            background: var(--bg-light);
+            padding: 15px;
+            border-radius: 12px;
+            margin-top: 15px;
+            border-left: 5px solid var(--accent);
+        }
 
-        #encouragement-msg { display: none; background: #caffbf; padding: 18px; border-radius: 14px; text-align: center; margin-top: 25px; font-weight: 600; font-size: 18px; animation: bounceIn 0.5s; }
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9em;
+            color: #6c757d;
+            margin-bottom: 5px;
+        }
 
-        /* ประวัติการระบาย */
-        .history-list { display: flex; flex-direction: column; gap: 15px; max-height: 400px; overflow-y: auto; padding-right: 5px; margin-top: 15px; }
-        .history-list::-webkit-scrollbar { width: 8px; } .history-list::-webkit-scrollbar-thumb { background: #cdb4db; border-radius: 10px; }
-        .history-card { background: #fdfdfd; border-left: 6px solid var(--primary-blue); padding: 18px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); text-align: left; }
-        .history-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed #e9ecef; padding-bottom: 10px; margin-bottom: 10px; }
-        .history-mood { font-size: 18px; font-weight: 600; } .history-time { font-size: 14px; color: #6c757d; background: #f8f9fa; padding: 4px 10px; border-radius: 20px; }
-        .history-note { font-size: 16px; color: #4a4e69; line-height: 1.5; white-space: pre-wrap; margin-top: 5px; }
+        /* กราฟ */
+        .chart-container {
+            position: relative;
+            height: 300px;
+            width: 100%;
+            margin-top: 20px;
+        }
 
-        /* ฟีดอาจารย์ */
-        .staff-feed-card { display: flex; align-items: center; gap: 15px; background: #fff; padding: 12px 15px; border-radius: 12px; border: 1px solid #e9ecef; margin-bottom: 10px; }
-        .staff-feed-emoji { font-size: 30px; } .staff-feed-info { flex: 1; }
-        .staff-feed-major { font-weight: 600; font-size: 15px; color: #3d405b; } .staff-feed-time { font-size: 13px; color: #adb5bd; }
-
-        .hidden { display: none !important; }
-
-        /* ปรับสัดส่วนให้พอดีกับมือถือแบบอัตโนมัติ */
-        @media (max-width: 600px) {
-            .container { padding: 20px; border-radius: 18px; margin-top: 0; }
-            h1 { font-size: 26px; } h2 { font-size: 22px; }
-            .role-card { min-width: 100%; padding: 30px 15px; font-size: 20px; }
-            .mood-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
-            .mood-btn { padding: 10px; font-size: 15px; }
-            .mood-btn span.emoji { font-size: 32px; }
+        .summary-box {
+            background: var(--secondary);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            text-align: center;
         }
     </style>
 </head>
 <body>
 
-    <div class="container" id="app-container">
-        
-        <div id="view-role-selection">
-            <h1>💙 ยินดีต้อนรับสู่ MindU</h1>
-            <p class="text-center" style="font-size: 18px; color: #6c757d;">พื้นที่ปลอดภัยสำหรับบันทึกสุขภาพใจนักศึกษา</p>
-            <div class="role-buttons">
-                <div class="role-card" onclick="switchView('view-student')">🎓 นักศึกษา<br><span style="font-size: 16px; font-weight: normal;">(เข้าสู่ระบบ)</span></div>
-                <div class="role-card staff" onclick="enterStaffView()">👨‍🏫 อาจารย์ / บุคลากร<br><span style="font-size: 16px; font-weight: normal;">(เฉพาะเจ้าหน้าที่)</span></div>
-            </div>
-        </div>
-
-        <div id="view-student" class="hidden">
-            <button class="btn btn-back" onclick="switchView('view-role-selection')">⬅ ออกจากระบบ</button>
-            <h2>วันนี้ใจเป็นยังไงบ้าง? 💙</h2>
-            
-            <label for="student-major" style="font-weight: 500; margin-bottom: 8px; display: block;">มหาวิทยาลัยราชภัฏจันทรเกษม:</label>
-            <select id="student-major">
-                <optgroup label="คณะศึกษาศาสตร์">
-                    <option value="ComCru" selected>สาขาวิชาคอมพิวเตอร์ศึกษา (ComCru)</option>
-                    <option value="EarlyChild">สาขาวิชาการศึกษาปฐมวัย</option>
-                    <option value="PE">สาขาวิชาพลศึกษา</option>
-                </optgroup>
-                <optgroup label="คณะวิทยาศาสตร์">
-                    <option value="IT">สาขาวิชาเทคโนโลยีสารสนเทศ</option>
-                    <option value="CS">สาขาวิชาวิทยาการคอมพิวเตอร์</option>
-                    <option value="DataSci">สาขาวิชาวิทยาการข้อมูล</option>
-                </optgroup>
-                <optgroup label="คณะวิทยาการจัดการ">
-                    <option value="BizAdmin">สาขาวิชาบริหารธุรกิจ</option>
-                    <option value="CommArts">สาขาวิชานิเทศศาสตร์</option>
-                </optgroup>
-            </select>
-
-            <div class="mood-grid" id="mood-selector">
-                <button class="mood-btn" data-color="gold" onclick="selectMood('ตัวมารดา', this)"><span class="emoji">👑</span>ตัวมารดา</button>
-                <button class="mood-btn" data-color="green" onclick="selectMood('ว้าวุ่น', this)"><span class="emoji">😵‍💫</span>ว้าวุ่น</button>
-                <button class="mood-btn" data-color="pink" onclick="selectMood('ฉ่ำ', this)"><span class="emoji">✨</span>ฉ่ำ</button>
-                <button class="mood-btn" data-color="blue" onclick="selectMood('นอยด์', this)"><span class="emoji">😞</span>นอยด์</button>
-                <button class="mood-btn" data-color="orange" onclick="selectMood('จึ้ง', this)"><span class="emoji">🔥</span>จึ้ง</button>
-                <button class="mood-btn" data-color="dark" onclick="selectMood('ขิต', this)"><span class="emoji">💀</span>ขิต</button>
-                <button class="mood-btn" data-color="red" onclick="selectMood('จะเครซี่', this)"><span class="emoji">🤯</span>จะเครซี่</button>
-                <button class="mood-btn" data-color="cyan" onclick="selectMood('กี่โมง', this)"><span class="emoji">⏰</span>กี่โมง</button>
-            </div>
-
-            <textarea id="student-note" placeholder="มีอะไรอยากระบาย พิมพ์ทิ้งไว้ตรงนี้ได้เลยนะ พื้นที่ปลอดภัยสำหรับคุณ..."></textarea>
-            
-            <button class="btn btn-primary" onclick="saveMood()">บันทึกความรู้สึก 💌</button>
-            <div id="encouragement-msg"></div>
-
-            <div id="student-stats-section" class="hidden chart-container" style="margin-top: 40px;">
-                <h3>📝 ประวัติความรู้สึกของคุณ</h3>
-                <div id="daily-stats" class="text-center" style="margin-bottom: 15px; color: #6c757d;">กำลังโหลดข้อมูล...</div>
-                
-                <div id="student-history-list" class="history-list"></div>
-
-                <h3 class="mt-4">📈 กราฟระดับพลังงานใจ</h3>
-                <canvas id="studentChart"></canvas>
-                <p class="text-center" style="color: #8d99ae; font-size: 14px; margin-top: 15px;">
-                    💡 ระดับ 1 (ขิต / พลังงานต่ำสุด) ➡️ ไปจนถึงระดับ 5 (ตัวมารดา / พลังงานสูงสุด)
-                </p>
-            </div>
-        </div>
-
-        <div id="view-staff" class="hidden">
-            <button class="btn btn-back" onclick="switchView('view-role-selection')">⬅ ออกจากระบบอาจารย์</button>
-            <h2>📊 Dashboard สุขภาพใจนักศึกษา</h2>
-            <p class="text-center" style="color: #ff006e; font-size: 14px; margin-top: -15px; margin-bottom: 20px;">
-                * ระบบรักษาความลับ: อาจารย์จะเห็นเพียงภาพรวมและอารมณ์ ไม่สามารถดูข้อความระบายของนักศึกษาได้
-            </p>
-            
-            <label for="staff-filter-major" style="font-weight: 500; margin-bottom: 8px; display: block;">กรองตามสาขาวิชา:</label>
-            <select id="staff-filter-major" onchange="updateStaffDashboard()">
-                <option value="All">รวมทุกสาขาวิชาในมหาวิทยาลัย</option>
-                <optgroup label="คณะศึกษาศาสตร์">
-                    <option value="ComCru">สาขาวิชาคอมพิวเตอร์ศึกษา (ComCru)</option>
-                    <option value="EarlyChild">สาขาวิชาการศึกษาปฐมวัย</option>
-                    <option value="PE">สาขาวิชาพลศึกษา</option>
-                </optgroup>
-                <optgroup label="คณะวิทยาศาสตร์">
-                    <option value="IT">สาขาวิชาเทคโนโลยีสารสนเทศ</option>
-                    <option value="CS">สาขาวิชาวิทยาการคอมพิวเตอร์</option>
-                    <option value="DataSci">สาขาวิชาวิทยาการข้อมูล</option>
-                </optgroup>
-                <optgroup label="คณะวิทยาการจัดการ">
-                    <option value="BizAdmin">สาขาวิชาบริหารธุรกิจ</option>
-                    <option value="CommArts">สาขาวิชานิเทศศาสตร์</option>
-                </optgroup>
-            </select>
-
-            <div class="stats-box" id="staff-summary" style="margin-bottom: 20px; background: white; border: 2px solid #a2d2ff;">
-                กำลังประมวลผลข้อมูล...
-            </div>
-
-            <div class="chart-container" style="margin-top: 0; padding-top: 10px;">
-                <canvas id="staffChart"></canvas>
-            </div>
-
-            <h4 class="mt-4" style="color: #6c757d; border-top: 1px dashed #cdb4db; padding-top: 20px;">🔔 อารมณ์ล่าสุดที่ถูกบันทึก (ไม่ระบุตัวตน)</h4>
-            <div id="staff-history-feed" class="history-list" style="max-height: 250px;"></div>
-        </div>
+    <div id="role-screen" class="container active-screen">
+        <span class="logo">💙</span>
+        <h1>MindU</h1>
+        <p style="text-align: center; margin-bottom: 30px;">ยินดีต้อนรับสู่พื้นที่ปลอดภัยของคุณ</p>
+        <button class="btn-primary" onclick="switchScreen('student-screen')">👩‍🎓 ฉันคือนักศึกษา</button>
+        <button class="btn-accent" onclick="switchScreen('login-screen')">👨‍🏫 ฉันคืออาจารย์ / บุคลากร</button>
     </div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-        import { getFirestore, collection, addDoc, onSnapshot, query, orderBy } 
-        from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+    <div id="login-screen" class="container">
+        <span class="logo">🔐</span>
+        <h2>เข้าสู่ระบบอาจารย์</h2>
+        <input type="password" id="staff-password" placeholder="กรุณาใส่รหัสผ่าน (20043)">
+        <p id="login-error" style="color: red; display: none; text-align: center; margin-bottom: 10px;">รหัสผ่านไม่ถูกต้อง!</p>
+        <button class="btn-accent" onclick="checkPassword()">เข้าสู่ระบบ</button>
+        <button class="btn-back" onclick="switchScreen('role-screen')">กลับ</button>
+    </div>
 
+    <div id="student-screen" class="container">
+        <h2>วันนี้ใจเป็นยังไงบ้าง? 🌿</h2>
+        
+        <select id="student-major">
+            <option value="" disabled selected>-- เลือกสาขาวิชาของคุณ --</option>
+            <option value="คอมพิวเตอร์ศึกษา">คอมพิวเตอร์ศึกษา</option>
+            <option value="วิทยาการคอมพิวเตอร์">วิทยาการคอมพิวเตอร์</option>
+            <option value="เทคโนโลยีสารสนเทศ">เทคโนโลยีสารสนเทศ</option>
+            <option value="วิศวกรรมซอฟต์แวร์">วิศวกรรมซอฟต์แวร์</option>
+        </select>
+
+        <div class="mood-grid" id="mood-container">
+            </div>
+
+        <textarea id="student-text" rows="4" placeholder="ระบายความรู้สึกของคุณที่นี่ (อาจารย์จะไม่เห็นข้อความนี้)..."></textarea>
+        
+        <button class="btn-primary" onclick="saveMood()">บันทึกใจไว้ 💌</button>
+        <button class="btn-back" onclick="switchScreen('role-screen')">กลับไปหน้าแรก</button>
+
+        <hr style="border: 0; border-top: 1px solid #eee; margin: 30px 0;">
+        
+        <h3>📝 ประวัติการบันทึกของคุณ</h3>
+        <div id="student-history-list">
+            </div>
+    </div>
+
+    <div id="staff-screen" class="container" style="max-width: 800px;">
+        <h2>📊 ภาพรวมอารมณ์นักศึกษา</h2>
+        
+        <select id="filter-major" onchange="loadStaffDashboard()">
+            <option value="all">ดูทุกสาขาวิชา</option>
+            <option value="คอมพิวเตอร์ศึกษา">คอมพิวเตอร์ศึกษา</option>
+            <option value="วิทยาการคอมพิวเตอร์">วิทยาการคอมพิวเตอร์</option>
+            <option value="เทคโนโลยีสารสนเทศ">เทคโนโลยีสารสนเทศ</option>
+            <option value="วิศวกรรมซอฟต์แวร์">วิศวกรรมซอฟต์แวร์</option>
+        </select>
+
+        <div class="chart-container">
+            <canvas id="moodChart"></canvas>
+        </div>
+
+        <div class="summary-box" id="staff-summary">
+            กำลังโหลดข้อมูลสรุป...
+        </div>
+
+        <button class="btn-back" onclick="switchScreen('role-screen')" style="margin-top: 20px;">ออกจากระบบ</button>
+    </div>
+
+    <script>
+        // --- 1. การตั้งค่า Firebase ---
         const firebaseConfig = {
-            apiKey: "AIzaSyDiUc6y2M5FCu-tEnY1mgYGgVhu7H-PFnE", 
+            apiKey: "AIzaSyDiUc6y2M5FCu-tEnY1mgYGgVhu7H-PFnE",
             authDomain: "mindu-9f4b0.firebaseapp.com",
-            projectId: "mindu-9f4b0", 
+            projectId: "mindu-9f4b0",
             storageBucket: "mindu-9f4b0.firebasestorage.app",
-            messagingSenderId: "237113799668", 
-            appId: "1:237113799668:web:0842f44252a1650a3abfa1"
+            messagingSenderId: "237113799668",
+            appId: "1:237113799668:web:0842f44252a1650a3abfa1",
+            measurementId: "G-BYCSEYKY06"
         };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
 
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
+        // --- 2. ตัวแปรและข้อมูลพื้นฐาน ---
+        const moods = [
+            { id: "mother", emoji: "👑", text: "ตัวมารดา" },
+            { id: "confused", emoji: "😵‍💫", text: "ว้าวุ่น" },
+            { id: "glow", emoji: "✨", text: "ฉ่ำ" },
+            { id: "noid", emoji: "😞", text: "นอยด์" },
+            { id: "fire", emoji: "🔥", text: "จึ้ง" },
+            { id: "dead", emoji: "💀", text: "ขิต" },
+            { id: "crazy", emoji: "🤯", text: "จะเครซี่" },
+            { id: "time", emoji: "⏰", text: "กี่โมง" },
+            { id: "water", emoji: "💧", text: "น้ำตาไหล" } // เพิ่มตามที่ต้องการ
+        ];
 
-        let appData = [];
-        let currentSelectedMood = "";
-        let studentChartInstance = null; 
-        let staffChartInstance = null;
+        let selectedMood = null;
+        let chartInstance = null;
 
-        const moodEmojiMap = { 
-            'ตัวมารดา': '👑', 'ว้าวุ่น': '😵‍💫', 'ฉ่ำ': '✨', 'นอยด์': '😞', 
-            'จึ้ง': '🔥', 'ขิต': '💀', 'จะเครซี่': '🤯', 'กี่โมง': '⏰' 
-        };
+        // ดึง Local Device ID เพื่อใช้โชว์ประวัตินักศึกษาเครื่องนั้นๆ
+        let deviceId = localStorage.getItem("mindu_device_id");
+        if (!deviceId) {
+            deviceId = "device_" + Math.random().toString(36).substr(2, 9);
+            localStorage.setItem("mindu_device_id", deviceId);
+        }
 
-        window.enterStaffView = () => {
-            const pin = prompt("🔐 กรุณาใส่รหัสผ่านเพื่อเข้าสู่ระบบของบุคลากร:");
-            if (pin === "20043") {
-                switchView('view-staff');
-            } else if (pin !== null) {
-                alert("❌ รหัสผ่านไม่ถูกต้อง! ไม่อนุญาตให้เข้าถึงข้อมูล");
+        const messages = [
+            "เก่งมากที่ผ่านวันนี้มาได้นะ 💙",
+            "พักผ่อนเยอะๆ พรุ่งนี้เริ่มต้นใหม่ 🌟",
+            "ไม่เป็นไรนะ กอดๆ 🤗",
+            "คุณทำดีที่สุดแล้ว ภูมิใจในตัวเองเถอะ ✨"
+        ];
+
+        // --- 3. ฟังก์ชันการทำงานของ UI ---
+        function switchScreen(screenId) {
+            document.querySelectorAll('.container').forEach(el => el.classList.remove('active-screen'));
+            document.getElementById(screenId).classList.add('active-screen');
+
+            if (screenId === 'student-screen') {
+                renderMoodButtons();
+                loadStudentHistory();
+            } else if (screenId === 'staff-screen') {
+                loadStaffDashboard();
             }
-        };
+        }
 
-        window.switchView = (viewId) => {
-            document.getElementById('view-role-selection').classList.add('hidden');
-            document.getElementById('view-student').classList.add('hidden');
-            document.getElementById('view-staff').classList.add('hidden');
-            
-            if(viewId !== 'view-student') document.getElementById('student-stats-section').classList.add('hidden');
-            
-            document.getElementById(viewId).classList.remove('hidden');
-            
-            if(viewId === 'view-staff') updateStaffDashboard();
-            if(viewId === 'view-student' && appData.length > 0) {
-                document.getElementById('student-stats-section').classList.remove('hidden');
-                updateStudentChart(); 
-                renderStudentHistory();
-            }
-        };
+        function renderMoodButtons() {
+            const container = document.getElementById('mood-container');
+            container.innerHTML = '';
+            moods.forEach(mood => {
+                const btn = document.createElement('div');
+                btn.className = 'mood-btn';
+                btn.innerHTML = `<span class="mood-emoji">${mood.emoji}</span>${mood.text}`;
+                btn.onclick = () => {
+                    document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('selected'));
+                    btn.classList.add('selected');
+                    selectedMood = mood;
+                };
+                container.appendChild(btn);
+            });
+        }
 
-        window.selectMood = (moodName, btnElement) => {
-            currentSelectedMood = moodName;
-            document.querySelectorAll('.mood-btn').forEach(btn => btn.classList.remove('active'));
-            btnElement.classList.add('active');
-        };
+        // --- 4. ฟังก์ชันของฝั่งนักศึกษา ---
+        async function saveMood() {
+            const major = document.getElementById('student-major').value;
+            const text = document.getElementById('student-text').value;
 
-        window.saveMood = async () => {
-            if (!currentSelectedMood) { alert("กรุณาเลือกอารมณ์ของวันนี้ก่อนบันทึกนะ 😊"); return; }
+            if (!major) return alert("กรุณาเลือกสาขาวิชาของคุณด้วยนะ 😊");
+            if (!selectedMood) return alert("เลือกอารมณ์วันนี้ให้หน่อยนะ 🥺");
 
-            const noteInput = document.getElementById('student-note').value;
-            const majorSelect = document.getElementById('student-major');
-            const majorText = majorSelect.options[majorSelect.selectedIndex].text; 
-
-            const record = {
-                mood: currentSelectedMood,
-                majorValue: majorSelect.value, 
-                majorText: majorText, 
-                note: noteInput,
-                timestamp: Date.now()
+            const entry = {
+                deviceId: deviceId,
+                major: major,
+                moodText: selectedMood.text,
+                moodEmoji: selectedMood.emoji,
+                text: text, // บันทึกข้อความ แต่จะไม่ดึงไปแสดงฝั่งอาจารย์
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
             };
 
-            if(typeof confetti === 'function') {
-                confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 }, colors: ['#a2d2ff', '#ffc8dd', '#cdb4db'] });
-            }
-
-            const msgBox = document.getElementById('encouragement-msg');
-            msgBox.innerText = "บันทึกความรู้สึกของคุณเรียบร้อยแล้ว เก่งมากเลยที่ผ่านวันนี้มาได้ 🌟";
-            msgBox.style.display = 'block';
-
-            document.getElementById('student-note').value = "";
-            document.querySelectorAll('.mood-btn').forEach(btn => btn.classList.remove('active'));
-            currentSelectedMood = "";
-
-            try { 
-                await addDoc(collection(db, "mood_records"), record);
-            } catch (error) { 
-                appData.push(record); 
-            }
-
-            document.getElementById('student-stats-section').classList.remove('hidden');
-            updateStudentChart();
-            renderStudentHistory();
-
-            setTimeout(() => { msgBox.style.display = 'none'; }, 5000);
-        };
-
-        window.renderStudentHistory = () => {
-            const historyContainer = document.getElementById('student-history-list');
-            historyContainer.innerHTML = '';
-            const sortedData = [...appData].sort((a, b) => b.timestamp - a.timestamp);
-
-            if (sortedData.length === 0) return;
-
-            sortedData.forEach(item => {
-                const dateObj = new Date(item.timestamp);
-                const timeStr = dateObj.toLocaleDateString('th-TH', { month: 'short', day: 'numeric' }) + ' ' + 
-                              dateObj.toLocaleTimeString('th-TH', { hour: '2-digit', minute:'2-digit' }) + ' น.';
-                const emoji = moodEmojiMap[item.mood] || '';
+            try {
+                // บันทึกลง Firebase
+                await db.collection("mindu_entries").add(entry);
                 
-                let borderColor = '#a2d2ff';
-                if(['ตัวมารดา', 'ฉ่ำ'].includes(item.mood)) borderColor = '#ffd6a5';
-                if(['ว้าวุ่น', 'นอยด์', 'ขิต'].includes(item.mood)) borderColor = '#ffadad';
+                // สุ่มข้อความให้กำลังใจ
+                const randomMsg = messages[Math.floor(Math.random() * messages.length)];
+                alert(`บันทึกสำเร็จ! 🎉\n${randomMsg}`);
+                
+                // เคลียร์ฟอร์ม
+                document.getElementById('student-text').value = '';
+                document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('selected'));
+                selectedMood = null;
 
-                const noteHtml = item.note.trim() !== '' 
-                    ? `<div class="history-note">💭 "${item.note}"</div>` 
-                    : `<div class="history-note" style="color: #adb5bd; font-style: italic;">ไม่มีข้อความระบาย</div>`;
+                // รีเฟรชประวัติ
+                loadStudentHistory();
 
-                historyContainer.innerHTML += `
-                    <div class="history-card" style="border-left-color: ${borderColor};">
+            } catch (error) {
+                console.error("Error saving document: ", error);
+                alert("เกิดข้อผิดพลาดในการบันทึกข้อมูล");
+            }
+        }
+
+        async function loadStudentHistory() {
+            const list = document.getElementById('student-history-list');
+            list.innerHTML = '<p>กำลังโหลดประวัติ...</p>';
+
+            try {
+                const snapshot = await db.collection("mindu_entries")
+                    .where("deviceId", "==", deviceId)
+                    .orderBy("timestamp", "desc")
+                    .limit(5)
+                    .get();
+
+                if (snapshot.empty) {
+                    list.innerHTML = '<p style="text-align:center; color:#999;">ยังไม่มีประวัติการบันทึก เริ่มบันทึกความรู้สึกแรกของคุณเลย!</p>';
+                    return;
+                }
+
+                list.innerHTML = '';
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    const date = data.timestamp ? data.timestamp.toDate().toLocaleString('th-TH') : 'เมื่อสักครู่';
+                    
+                    const card = document.createElement('div');
+                    card.className = 'history-card';
+                    card.innerHTML = `
                         <div class="history-header">
-                            <span class="history-mood">${emoji} ${item.mood}</span>
-                            <span class="history-time">🕒 ${timeStr}</span>
+                            <span>อารมณ์: ${data.moodEmoji} ${data.moodText}</span>
+                            <span>${date}</span>
                         </div>
-                        ${noteHtml}
-                    </div>
-                `;
-            });
-        };
+                        <p style="margin-top: 10px; color: #444;">${data.text ? data.text : '<i>(ไม่มีข้อความระบาย)</i>'}</p>
+                    `;
+                    list.appendChild(card);
+                });
+            } catch (error) {
+                console.error("Error loading history: ", error);
+                list.innerHTML = '<p>ไม่สามารถโหลดประวัติได้</p>';
+            }
+        }
 
-        window.updateStaffDashboard = () => {
-            const selectedMajorValue = document.getElementById('staff-filter-major').value;
-            const filteredData = selectedMajorValue === 'All' ? appData : appData.filter(d => d.majorValue === selectedMajorValue);
-            
-            const moodCounts = {};
-            filteredData.forEach(d => { moodCounts[d.mood] = (moodCounts[d.mood] || 0) + 1; });
-            const labels = Object.keys(moodCounts);
-            const data = Object.values(moodCounts);
-
-            if(staffChartInstance) staffChartInstance.destroy();
-            const ctx = document.getElementById('staffChart').getContext('2d');
-            staffChartInstance = new Chart(ctx, {
-                type: 'pie',
-                data: { 
-                    labels: labels, 
-                    datasets: [{ data: data, backgroundColor: ['#ffd6a5', '#caffbf', '#ffadad', '#a0c4ff', '#fdffb6', '#bdb2ff', '#ffc6ff', '#9bf6ff'], borderWidth: 2 }] 
-                },
-                options: { responsive: true, plugins: { legend: { position: 'bottom' } }, maintainAspectRatio: false }
-            });
-
-            const summaryDiv = document.getElementById('staff-summary');
-            if(filteredData.length === 0) {
-                summaryDiv.innerHTML = "ยังไม่มีข้อมูลนักศึกษาในสาขานี้ครับ";
+        // --- 5. ฟังก์ชันของฝั่งอาจารย์ ---
+        function checkPassword() {
+            const pwd = document.getElementById('staff-password').value;
+            if (pwd === "20043") {
+                document.getElementById('staff-password').value = '';
+                document.getElementById('login-error').style.display = 'none';
+                switchScreen('staff-screen');
             } else {
-                let mostFrequentMood = labels.reduce((a, b) => moodCounts[a] > moodCounts[b] ? a : b);
-                summaryDiv.innerHTML = `บันทึกทั้งหมด <b>${filteredData.length}</b> รายการ | อารมณ์ส่วนใหญ่: <b style="color: #ff006e;">"${mostFrequentMood}"</b>`;
+                document.getElementById('login-error').style.display = 'block';
             }
+        }
 
-            const feedContainer = document.getElementById('staff-history-feed');
-            feedContainer.innerHTML = '';
-            const sortedFeed = [...filteredData].sort((a, b) => b.timestamp - a.timestamp).slice(0, 20);
+        async function loadStaffDashboard() {
+            const filter = document.getElementById('filter-major').value;
             
-            if (sortedFeed.length === 0) { 
-                feedContainer.innerHTML = '<p class="text-center" style="color:#adb5bd;">ยังไม่มีอารมณ์ถูกบันทึก</p>'; 
-                return; 
+            try {
+                let query = db.collection("mindu_entries");
+                if (filter !== "all") {
+                    query = query.where("major", "==", filter);
+                }
+                
+                const snapshot = await query.get();
+                const moodCounts = {};
+                let totalEntries = 0;
+
+                snapshot.forEach(doc => {
+                    // ดึงแค่อารมณ์มานับ (ไม่ดึงข้อความระบายมาใช้งาน)
+                    const mood = doc.data().moodText;
+                    moodCounts[mood] = (moodCounts[mood] || 0) + 1;
+                    totalEntries++;
+                });
+
+                updateChart(moodCounts);
+                updateSummary(moodCounts, totalEntries, filter);
+
+            } catch (error) {
+                console.error("Error loading dashboard: ", error);
+            }
+        }
+
+        function updateChart(data) {
+            const ctx = document.getElementById('moodChart').getContext('2d');
+            
+            if (chartInstance) {
+                chartInstance.destroy();
             }
 
-            sortedFeed.forEach(item => {
-                const dateObj = new Date(item.timestamp);
-                const timeStr = dateObj.toLocaleTimeString('th-TH', { hour: '2-digit', minute:'2-digit' }) + ' น.';
-                const emoji = moodEmojiMap[item.mood] || '';
-                
-                feedContainer.innerHTML += `
-                    <div class="staff-feed-card">
-                        <div class="staff-feed-emoji">${emoji}</div>
-                        <div class="staff-feed-info">
-                            <div class="staff-feed-major">${item.majorText || 'นักศึกษา'} รู้สึก ${item.mood}</div>
-                            <div class="staff-feed-time">บันทึกเมื่อเวลา ${timeStr}</div>
-                        </div>
-                    </div>
-                `;
-            });
-        };
+            const labels = Object.keys(data);
+            const values = Object.values(data);
 
-        window.updateStudentChart = () => {
-            const today = new Date().setHours(0,0,0,0);
-            const recordsToday = appData.filter(d => new Date(d.timestamp).setHours(0,0,0,0) === today);
-            document.getElementById('daily-stats').innerHTML = `วันนี้บันทึกไปแล้ว <b>${recordsToday.length}</b> ครั้ง`;
+            if (labels.length === 0) {
+                // ถ้าไม่มีข้อมูล
+                chartInstance = new Chart(ctx, {
+                    type: 'pie',
+                    data: { labels: ['ไม่มีข้อมูล'], datasets: [{ data: [1], backgroundColor: ['#eee'] }] }
+                });
+                return;
+            }
 
-            const ctx = document.getElementById('studentChart').getContext('2d');
-            const recentData = appData.slice(-10);
-            const labels = recentData.map((d, i) => `ครั้งที่ ${i+1}`);
-            const dataPoints = recentData.map(d => {
-                const moodScores = { 'ตัวมารดา':5, 'ฉ่ำ':5, 'จึ้ง':4, 'ว้าวุ่น':3, 'กี่โมง':3, 'จะเครซี่':2, 'นอยด์':2, 'ขิต':1 };
-                return moodScores[d.mood] || 3;
-            });
-
-            if(studentChartInstance) studentChartInstance.destroy();
-            studentChartInstance = new Chart(ctx, {
-                type: 'line',
-                data: { 
-                    labels: labels, 
-                    datasets: [{ label: 'ระดับพลังงานใจ', data: dataPoints, borderColor: '#cdb4db', backgroundColor: 'rgba(205, 180, 219, 0.3)', borderWidth: 3, fill: true, tension: 0.3 }] 
+            chartInstance = new Chart(ctx, {
+                type: 'pie', // ใช้กราฟวงกลมดูสัดส่วน
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: values,
+                        backgroundColor: [
+                            '#FFB5E8', '#B28DFF', '#AFCBFF', '#AFF8DB', 
+                            '#FFC9DE', '#FFABAB', '#FFC3A0', '#D5AAFF', '#85E3FF'
+                        ]
+                    }]
                 },
-                options: { 
-                    responsive: true, 
+                options: {
+                    responsive: true,
                     maintainAspectRatio: false,
-                    scales: { y: { min: 0, max: 6, ticks: { stepSize: 1 } } } 
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    }
                 }
             });
-        };
+        }
 
-        const q = query(collection(db, "mood_records"), orderBy("timestamp", "asc"));
-        onSnapshot(q, (snapshot) => {
-            let firestoreData = [];
-            snapshot.forEach((doc) => { firestoreData.push(doc.data()); });
-            
-            if(firestoreData.length === 0) {
-                appData = [
-                    { mood: 'ฉ่ำ', majorValue: 'ComCru', majorText: 'สาขาวิชาคอมพิวเตอร์ศึกษา (ComCru)', note: 'วันนี้เรียนเข้าใจมาก!', timestamp: Date.now() - 86400000 },
-                    { mood: 'นอยด์', majorValue: 'IT', majorText: 'สาขาวิชาเทคโนโลยีสารสนเทศ', note: 'ฝนตก รถติด มาสายเลย', timestamp: Date.now() - 3600000 }
-                ];
-            } else { 
-                appData = firestoreData; 
+        function updateSummary(data, total, filter) {
+            const summaryBox = document.getElementById('staff-summary');
+            if (total === 0) {
+                summaryBox.innerHTML = `ยังไม่มีข้อมูลการบันทึกอารมณ์ของนักศึกษา${filter === 'all' ? 'ทั้งหมด' : 'สาขานี้'}`;
+                return;
             }
 
-            if (!document.getElementById('student-stats-section').classList.contains('hidden')) { 
-                updateStudentChart(); 
-                renderStudentHistory(); 
+            // หาอารมณ์ที่เยอะที่สุด
+            let maxMood = '';
+            let maxCount = 0;
+            for (const [mood, count] of Object.entries(data)) {
+                if (count > maxCount) {
+                    maxCount = count;
+                    maxMood = mood;
+                }
             }
-            if (!document.getElementById('view-staff').classList.contains('hidden')) {
-                updateStaffDashboard();
-            }
-        }, (error) => { 
-            console.warn("ระบบเชื่อมต่อจำลองทำงาน:", error.message); 
-        });
+
+            let text = `มีการบันทึกทั้งหมด <b>${total}</b> ครั้ง <br>`;
+            text += `อารมณ์ส่วนใหญ่ของนักศึกษาคือ <b>"${maxMood}"</b> (${maxCount} คน)`;
+            summaryBox.innerHTML = text;
+        }
+
     </script>
 </body>
 </html>
