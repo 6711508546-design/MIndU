@@ -1,4 +1,4 @@
-// ================= JavaScript: ระบบและฐานข้อมูล =================
+// ================= JavaScript: ระบบและฐานข้อมูล Firebase =================
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
 import { getFirestore, collection, addDoc, onSnapshot, query, orderBy } 
 from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
@@ -25,9 +25,9 @@ const moodEmojiMap = {
     'จึ้ง': '🔥', 'ขิต': '💀', 'จะเครซี่': '🤯', 'กี่โมง': '⏰' 
 };
 
-// ================= ระบบเข้าสู่หน้าอาจารย์ (PIN) =================
+// ฟังก์ชันเข้าหน้าอาจารย์ (ซ่อนคำใบ้รหัสผ่าน)
 window.enterStaffView = () => {
-    const pin = prompt("🔐 กรุณาใส่รหัสผ่านเพื่อเข้าสู่ระบบอาจารย์ (รหัส: 20043):");
+    const pin = prompt("🔐 กรุณาใส่รหัสผ่านเพื่อเข้าสู่ระบบของบุคลากร:");
     if (pin === "20043") {
         switchView('view-staff');
     } else if (pin !== null) {
@@ -58,7 +58,6 @@ window.selectMood = (moodName, btnElement) => {
     btnElement.classList.add('active');
 };
 
-// ================= ระบบบันทึกใจ (นักศึกษา) =================
 window.saveMood = async () => {
     if (!currentSelectedMood) { alert("กรุณาเลือกอารมณ์ของวันนี้ก่อนบันทึกนะ 😊"); return; }
 
@@ -74,7 +73,6 @@ window.saveMood = async () => {
         timestamp: Date.now()
     };
 
-    // เอฟเฟกต์จุดพลุ
     if(typeof confetti === 'function') {
         confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 }, colors: ['#a2d2ff', '#ffc8dd', '#cdb4db'] });
     }
@@ -93,7 +91,6 @@ window.saveMood = async () => {
         appData.push(record); 
     }
 
-    // แสดงประวัติทันทีหลังบันทึกเสร็จ
     document.getElementById('student-stats-section').classList.remove('hidden');
     updateStudentChart();
     renderStudentHistory();
@@ -101,7 +98,6 @@ window.saveMood = async () => {
     setTimeout(() => { msgBox.style.display = 'none'; }, 5000);
 };
 
-// ================= สร้างประวัตินักศึกษา =================
 window.renderStudentHistory = () => {
     const historyContainer = document.getElementById('student-history-list');
     historyContainer.innerHTML = '';
@@ -135,7 +131,6 @@ window.renderStudentHistory = () => {
     });
 };
 
-// ================= Dashboard ฝั่งอาจารย์ =================
 window.updateStaffDashboard = () => {
     const selectedMajorValue = document.getElementById('staff-filter-major').value;
     const filteredData = selectedMajorValue === 'All' ? appData : appData.filter(d => d.majorValue === selectedMajorValue);
@@ -153,7 +148,7 @@ window.updateStaffDashboard = () => {
             labels: labels, 
             datasets: [{ data: data, backgroundColor: ['#ffd6a5', '#caffbf', '#ffadad', '#a0c4ff', '#fdffb6', '#bdb2ff', '#ffc6ff', '#9bf6ff'], borderWidth: 2 }] 
         },
-        options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+        options: { responsive: true, plugins: { legend: { position: 'bottom' } }, maintainAspectRatio: false }
     });
 
     const summaryDiv = document.getElementById('staff-summary');
@@ -164,7 +159,6 @@ window.updateStaffDashboard = () => {
         summaryDiv.innerHTML = `บันทึกทั้งหมด <b>${filteredData.length}</b> รายการ | อารมณ์ส่วนใหญ่: <b style="color: #ff006e;">"${mostFrequentMood}"</b>`;
     }
 
-    // สร้างฟีดแบบไร้ข้อความ (เพื่อความเป็นส่วนตัว)
     const feedContainer = document.getElementById('staff-history-feed');
     feedContainer.innerHTML = '';
     const sortedFeed = [...filteredData].sort((a, b) => b.timestamp - a.timestamp).slice(0, 20);
@@ -191,7 +185,6 @@ window.updateStaffDashboard = () => {
     });
 };
 
-// ================= กราฟนักศึกษา =================
 window.updateStudentChart = () => {
     const today = new Date().setHours(0,0,0,0);
     const recordsToday = appData.filter(d => new Date(d.timestamp).setHours(0,0,0,0) === today);
@@ -210,22 +203,24 @@ window.updateStudentChart = () => {
         type: 'line',
         data: { 
             labels: labels, 
-            datasets: [{ label: 'ระดับใจ', data: dataPoints, borderColor: '#cdb4db', backgroundColor: 'rgba(205, 180, 219, 0.3)', borderWidth: 3, fill: true }] 
+            datasets: [{ label: 'ระดับพลังงานใจ', data: dataPoints, borderColor: '#cdb4db', backgroundColor: 'rgba(205, 180, 219, 0.3)', borderWidth: 3, fill: true, tension: 0.3 }] 
         },
-        options: { responsive: true, scales: { y: { min: 0, max: 6 } } }
+        options: { 
+            responsive: true, 
+            maintainAspectRatio: false,
+            scales: { y: { min: 0, max: 6, ticks: { stepSize: 1 } } } 
+        }
     });
 };
 
-// ================= ดึงข้อมูล Real-time =================
 const q = query(collection(db, "mood_records"), orderBy("timestamp", "asc"));
 onSnapshot(q, (snapshot) => {
     let firestoreData = [];
     snapshot.forEach((doc) => { firestoreData.push(doc.data()); });
     
     if(firestoreData.length === 0) {
-        // ข้อมูลตัวอย่าง
         appData = [
-            { mood: 'ฉ่ำ', majorValue: 'ComCru', majorText: 'สาขาวิชาคอมพิวเตอร์ศึกษา (ComCru)', note: 'วันนี้เรียนเขียนโปรแกรมเข้าใจมาก!', timestamp: Date.now() - 86400000 },
+            { mood: 'ฉ่ำ', majorValue: 'ComCru', majorText: 'สาขาวิชาคอมพิวเตอร์ศึกษา (ComCru)', note: 'วันนี้เรียนเข้าใจมาก!', timestamp: Date.now() - 86400000 },
             { mood: 'นอยด์', majorValue: 'IT', majorText: 'สาขาวิชาเทคโนโลยีสารสนเทศ', note: 'ฝนตก รถติด มาสายเลย', timestamp: Date.now() - 3600000 }
         ];
     } else { 
@@ -240,7 +235,7 @@ onSnapshot(q, (snapshot) => {
         updateStaffDashboard();
     }
 }, (error) => { 
-    console.warn("ใช้ระบบ Mock Data จำลองเนื่องจากไม่ได้เชื่อมต่อ:", error.message); 
+    console.warn("ระบบเชื่อมต่อจำลองทำงาน:", error.message); 
 });
     if (!document.getElementById('view-staff').classList.contains('hidden')) updateStaffDashboard();
 }, (error) => {
