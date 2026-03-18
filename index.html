@@ -14,16 +14,18 @@
     <style>
         :root {
             --text-main: #2b2d42; --white: #ffffff; --shadow: 0 10px 25px rgba(0,0,0,0.08);
-            --glass-bg: rgba(255, 255, 255, 0.9); --primary-blue: #a2d2ff;
+            --glass-bg: rgba(255, 255, 255, 0.95); --primary-blue: #a2d2ff;
         }
+
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Kanit', sans-serif; }
+
         body {
             background: linear-gradient(-45deg, #ffc8dd, #bde0fe, #cdb4db, #ffffb5);
             background-size: 400% 400%; animation: gradientBG 15s ease infinite;
             color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 20px;
         }
         @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
-        
+
         .container {
             width: 100%; max-width: 800px; background: var(--glass-bg); backdrop-filter: blur(10px);
             border-radius: 24px; box-shadow: var(--shadow); padding: 35px; margin-top: 10px;
@@ -50,14 +52,14 @@
         .role-card.staff { background: linear-gradient(135deg, #ffc8dd, #ffafcc); }
         .role-card:hover { transform: translateY(-10px); box-shadow: 0 15px 30px rgba(0,0,0,0.15); }
 
-        .mood-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; margin-bottom: 25px; }
+        .mood-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 15px; margin-bottom: 25px; }
         .mood-btn {
             background: var(--white); border: 3px solid #f8f9fa; border-radius: 20px; padding: 15px 10px;
-            font-size: 18px; font-weight: 500; cursor: pointer; transition: 0.3s; display: flex; flex-direction: column; align-items: center; gap: 8px;
+            font-size: 17px; font-weight: 500; cursor: pointer; transition: 0.3s; display: flex; flex-direction: column; align-items: center; gap: 8px;
         }
-        .mood-btn span.emoji { font-size: 40px; transition: 0.3s; }
+        .mood-btn span.emoji { font-size: 38px; transition: 0.3s; }
         .mood-btn:hover { transform: translateY(-5px); } .mood-btn:hover span.emoji { transform: scale(1.2); }
-        
+
         .mood-btn[data-color="gold"].active { border-color: #ffd6a5; background: #fff9f0; box-shadow: 0 5px 15px rgba(255,214,165,0.5); }
         .mood-btn[data-color="green"].active { border-color: #caffbf; background: #f2fcf1; box-shadow: 0 5px 15px rgba(202,255,191,0.5); }
         .mood-btn[data-color="pink"].active { border-color: #ffadad; background: #fff0f0; box-shadow: 0 5px 15px rgba(255,173,173,0.5); }
@@ -67,34 +69,48 @@
         .mood-btn[data-color="red"].active { border-color: #ffc6ff; background: #fff5ff; box-shadow: 0 5px 15px rgba(255,198,255,0.5); }
         .mood-btn[data-color="cyan"].active { border-color: #9bf6ff; background: #f0fdff; box-shadow: 0 5px 15px rgba(155,246,255,0.5); }
 
-        textarea, select {
-            width: 100%; padding: 15px; border-radius: 14px; border: 2px solid #e9ecef; font-size: 16px; outline: none; transition: 0.3s; background: white;
-        }
+        textarea, select { width: 100%; padding: 15px; border-radius: 14px; border: 2px solid #e9ecef; font-size: 16px; outline: none; transition: 0.3s; background: white; }
         textarea { height: 110px; resize: none; margin-bottom: 20px; }
         textarea:focus, select:focus { border-color: #a2d2ff; }
         select { margin-bottom: 25px; cursor: pointer; }
 
-        .chart-container { margin-top: 35px; padding-top: 25px; border-top: 2px dashed #cdb4db; background: white; border-radius: 20px; padding: 20px; box-shadow: var(--shadow); }
+        .chart-container { margin-top: 35px; padding-top: 25px; border-top: 2px dashed #cdb4db; background: white; border-radius: 20px; padding: 20px; box-shadow: var(--shadow); width: 100%; overflow: hidden; }
         .stats-box { background: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%); color: var(--text-main); padding: 20px; border-radius: 16px; text-align: center; margin-bottom: 25px; font-size: 18px; font-weight: 500; border: 2px solid white; }
 
         #encouragement-msg { display: none; background: #caffbf; padding: 18px; border-radius: 14px; text-align: center; margin-top: 25px; font-weight: 600; font-size: 18px; animation: bounceIn 0.5s; }
 
+        /* กล่องอธิบายกราฟ (เกณฑ์ให้คะแนน) */
+        .chart-legend {
+            background: #f8f9fa; padding: 18px; border-radius: 14px; border-left: 5px solid #cdb4db;
+            margin-top: 25px; font-size: 15px; line-height: 1.6; color: #4a4e69; text-align: left;
+        }
+        .chart-legend ul { margin-top: 10px; margin-left: 20px; }
+        .chart-legend li { margin-bottom: 5px; }
+
         .history-list { display: flex; flex-direction: column; gap: 15px; max-height: 400px; overflow-y: auto; padding-right: 5px; margin-top: 15px; }
         .history-list::-webkit-scrollbar { width: 8px; } .history-list::-webkit-scrollbar-thumb { background: #cdb4db; border-radius: 10px; }
-        
         .history-card { background: #fdfdfd; border-left: 6px solid var(--primary-blue); padding: 18px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); text-align: left; }
         .history-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed #e9ecef; padding-bottom: 10px; margin-bottom: 10px; }
         .history-mood { font-size: 18px; font-weight: 600; } .history-time { font-size: 14px; color: #6c757d; background: #f8f9fa; padding: 4px 10px; border-radius: 20px; }
         .history-note { font-size: 16px; color: #4a4e69; line-height: 1.5; white-space: pre-wrap; margin-top: 5px; }
-        
-        /* ฟีดอารมณ์ของอาจารย์ (ไม่แสดงข้อความ) */
+
         .staff-feed-card { display: flex; align-items: center; gap: 15px; background: #fff; padding: 12px 15px; border-radius: 12px; border: 1px solid #e9ecef; margin-bottom: 10px; }
-        .staff-feed-emoji { font-size: 30px; }
-        .staff-feed-info { flex: 1; }
-        .staff-feed-major { font-weight: 600; font-size: 15px; color: #3d405b; }
-        .staff-feed-time { font-size: 13px; color: #adb5bd; }
+        .staff-feed-emoji { font-size: 30px; } .staff-feed-info { flex: 1; }
+        .staff-feed-major { font-weight: 600; font-size: 15px; color: #3d405b; } .staff-feed-time { font-size: 13px; color: #adb5bd; }
 
         .hidden { display: none !important; }
+
+        /* การตั้งค่าให้รองรับจอมือถือ */
+        @media (max-width: 600px) {
+            .container { padding: 20px; border-radius: 18px; margin-top: 0; }
+            h1 { font-size: 26px; }
+            h2 { font-size: 22px; }
+            .role-card { min-width: 100%; padding: 30px 15px; font-size: 20px; }
+            .mood-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+            .mood-btn { padding: 10px; font-size: 15px; }
+            .mood-btn span.emoji { font-size: 32px; }
+            .chart-legend { font-size: 14px; padding: 15px; }
+        }
     </style>
 </head>
 <body>
@@ -106,7 +122,7 @@
             <p class="text-center" style="font-size: 18px; color: #6c757d;">พื้นที่ปลอดภัยสำหรับบันทึกสุขภาพใจนักศึกษา</p>
             <div class="role-buttons">
                 <div class="role-card" onclick="switchView('view-student')">🎓 นักศึกษา<br><span style="font-size: 16px; font-weight: normal;">(เข้าสู่ระบบ)</span></div>
-                <div class="role-card staff" onclick="enterStaffView()">👨‍🏫 อาจารย์ / บุคลากร<br><span style="font-size: 16px; font-weight: normal;">(ต้องใช้รหัสผ่าน)</span></div>
+                <div class="role-card staff" onclick="enterStaffView()">👨‍🏫 อาจารย์ / บุคลากร<br><span style="font-size: 16px; font-weight: normal;">(เฉพาะเจ้าหน้าที่)</span></div>
             </div>
         </div>
 
@@ -152,11 +168,21 @@
                 <h3>📝 ประวัติความรู้สึกของคุณ</h3>
                 <div id="daily-stats" class="text-center" style="margin-bottom: 15px; color: #6c757d;">กำลังโหลดข้อมูล...</div>
                 
-                <div id="student-history-list" class="history-list">
-                    </div>
+                <div id="student-history-list" class="history-list"></div>
 
                 <h3 class="mt-4">📈 กราฟระดับพลังงานใจ</h3>
                 <canvas id="studentChart"></canvas>
+
+                <div class="chart-legend">
+                    <b>💡 เกณฑ์ระดับพลังงานใจในกราฟ (ระดับ 1-5):</b>
+                    <ul>
+                        <li><span style="color:#ffb703;">ระดับ 5 (พลังงานล้นเหลือ / ดีเยี่ยม):</span> 👑 ตัวมารดา, ✨ ฉ่ำ</li>
+                        <li><span style="color:#fb8500;">ระดับ 4 (พลังงานบวก / ดีมาก):</span> 🔥 จึ้ง</li>
+                        <li><span style="color:#8ecae6;">ระดับ 3 (ปานกลาง / สับสนนิดๆ):</span> 😵‍💫 ว้าวุ่น, ⏰ กี่โมง</li>
+                        <li><span style="color:#ffb5a7;">ระดับ 2 (พลังงานตก / เริ่มเครียด):</span> 😞 นอยด์, 🤯 จะเครซี่</li>
+                        <li><span style="color:#e63946;">ระดับ 1 (หมดพลัง / ต้องการการพักผ่อน):</span> 💀 ขิต</li>
+                    </ul>
+                </div>
             </div>
         </div>
 
@@ -195,8 +221,7 @@
             </div>
 
             <h4 class="mt-4" style="color: #6c757d; border-top: 1px dashed #cdb4db; padding-top: 20px;">🔔 อารมณ์ล่าสุดที่ถูกบันทึก (ไม่ระบุตัวตน)</h4>
-            <div id="staff-history-feed" class="history-list" style="max-height: 250px;">
-                </div>
+            <div id="staff-history-feed" class="history-list" style="max-height: 250px;"></div>
         </div>
     </div>
 
@@ -206,22 +231,29 @@
         from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
         const firebaseConfig = {
-            apiKey: "AIzaSyDiUc6y2M5FCu-tEnY1mgYGgVhu7H-PFnE", authDomain: "mindu-9f4b0.firebaseapp.com",
-            projectId: "mindu-9f4b0", storageBucket: "mindu-9f4b0.firebasestorage.app",
-            messagingSenderId: "237113799668", appId: "1:237113799668:web:0842f44252a1650a3abfa1"
+            apiKey: "AIzaSyDiUc6y2M5FCu-tEnY1mgYGgVhu7H-PFnE", 
+            authDomain: "mindu-9f4b0.firebaseapp.com",
+            projectId: "mindu-9f4b0", 
+            storageBucket: "mindu-9f4b0.firebasestorage.app",
+            messagingSenderId: "237113799668", 
+            appId: "1:237113799668:web:0842f44252a1650a3abfa1"
         };
+
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
         let appData = [];
         let currentSelectedMood = "";
-        let studentChartInstance = null; let staffChartInstance = null;
+        let studentChartInstance = null; 
+        let staffChartInstance = null;
 
-        const moodEmojiMap = { 'ตัวมารดา': '👑', 'ว้าวุ่น': '😵‍💫', 'ฉ่ำ': '✨', 'นอยด์': '😞', 'จึ้ง': '🔥', 'ขิต': '💀', 'จะเครซี่': '🤯', 'กี่โมง': '⏰' };
+        const moodEmojiMap = { 
+            'ตัวมารดา': '👑', 'ว้าวุ่น': '😵‍💫', 'ฉ่ำ': '✨', 'นอยด์': '😞', 
+            'จึ้ง': '🔥', 'ขิต': '💀', 'จะเครซี่': '🤯', 'กี่โมง': '⏰' 
+        };
 
-        // 1. ฟังก์ชันใส่รหัสผ่านอาจารย์
         window.enterStaffView = () => {
-            const pin = prompt("🔐 กรุณาใส่รหัสผ่านเพื่อเข้าสู่ระบบอาจารย์ (รหัส: 20043):");
+            const pin = prompt("🔐 กรุณาใส่รหัสผ่านเพื่อเข้าสู่ระบบของบุคลากร:");
             if (pin === "20043") {
                 switchView('view-staff');
             } else if (pin !== null) {
@@ -233,14 +265,16 @@
             document.getElementById('view-role-selection').classList.add('hidden');
             document.getElementById('view-student').classList.add('hidden');
             document.getElementById('view-staff').classList.add('hidden');
-            // ซ่อนประวัตินักศึกษาเมื่อออกจากหน้า
+            
             if(viewId !== 'view-student') document.getElementById('student-stats-section').classList.add('hidden');
             
             document.getElementById(viewId).classList.remove('hidden');
+            
             if(viewId === 'view-staff') updateStaffDashboard();
             if(viewId === 'view-student' && appData.length > 0) {
                 document.getElementById('student-stats-section').classList.remove('hidden');
-                updateStudentChart(); renderStudentHistory();
+                updateStudentChart(); 
+                renderStudentHistory();
             }
         };
 
@@ -265,7 +299,9 @@
                 timestamp: Date.now()
             };
 
-            confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 }, colors: ['#a2d2ff', '#ffc8dd', '#cdb4db'] });
+            if(typeof confetti === 'function') {
+                confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 }, colors: ['#a2d2ff', '#ffc8dd', '#cdb4db'] });
+            }
 
             const msgBox = document.getElementById('encouragement-msg');
             msgBox.innerText = "บันทึกความรู้สึกของคุณเรียบร้อยแล้ว เก่งมากเลยที่ผ่านวันนี้มาได้ 🌟";
@@ -275,8 +311,11 @@
             document.querySelectorAll('.mood-btn').forEach(btn => btn.classList.remove('active'));
             currentSelectedMood = "";
 
-            try { await addDoc(collection(db, "mood_records"), record);
-            } catch (error) { appData.push(record); }
+            try { 
+                await addDoc(collection(db, "mood_records"), record);
+            } catch (error) { 
+                appData.push(record); 
+            }
 
             document.getElementById('student-stats-section').classList.remove('hidden');
             updateStudentChart();
@@ -331,8 +370,11 @@
             const ctx = document.getElementById('staffChart').getContext('2d');
             staffChartInstance = new Chart(ctx, {
                 type: 'pie',
-                data: { labels: labels, datasets: [{ data: data, backgroundColor: ['#ffd6a5', '#caffbf', '#ffadad', '#a0c4ff', '#fdffb6', '#bdb2ff', '#ffc6ff', '#9bf6ff'], borderWidth: 2 }] },
-                options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+                data: { 
+                    labels: labels, 
+                    datasets: [{ data: data, backgroundColor: ['#ffd6a5', '#caffbf', '#ffadad', '#a0c4ff', '#fdffb6', '#bdb2ff', '#ffc6ff', '#9bf6ff'], borderWidth: 2 }] 
+                },
+                options: { responsive: true, plugins: { legend: { position: 'bottom' } }, maintainAspectRatio: false }
             });
 
             const summaryDiv = document.getElementById('staff-summary');
@@ -347,7 +389,10 @@
             feedContainer.innerHTML = '';
             const sortedFeed = [...filteredData].sort((a, b) => b.timestamp - a.timestamp).slice(0, 20);
             
-            if (sortedFeed.length === 0) { feedContainer.innerHTML = '<p class="text-center" style="color:#adb5bd;">ยังไม่มีอารมณ์ถูกบันทึก</p>'; return; }
+            if (sortedFeed.length === 0) { 
+                feedContainer.innerHTML = '<p class="text-center" style="color:#adb5bd;">ยังไม่มีอารมณ์ถูกบันทึก</p>'; 
+                return; 
+            }
 
             sortedFeed.forEach(item => {
                 const dateObj = new Date(item.timestamp);
@@ -382,8 +427,15 @@
             if(studentChartInstance) studentChartInstance.destroy();
             studentChartInstance = new Chart(ctx, {
                 type: 'line',
-                data: { labels: labels, datasets: [{ label: 'ระดับใจ', data: dataPoints, borderColor: '#cdb4db', backgroundColor: 'rgba(205, 180, 219, 0.3)', borderWidth: 3, fill: true }] },
-                options: { responsive: true, scales: { y: { min: 0, max: 6 } } }
+                data: { 
+                    labels: labels, 
+                    datasets: [{ label: 'ระดับพลังงานใจ', data: dataPoints, borderColor: '#cdb4db', backgroundColor: 'rgba(205, 180, 219, 0.3)', borderWidth: 3, fill: true, tension: 0.3 }] 
+                },
+                options: { 
+                    responsive: true, 
+                    maintainAspectRatio: false,
+                    scales: { y: { min: 0, max: 6, ticks: { stepSize: 1 } } } 
+                }
             });
         };
 
@@ -394,15 +446,23 @@
             
             if(firestoreData.length === 0) {
                 appData = [
-                    { mood: 'ฉ่ำ', majorValue: 'ComCru', majorText: 'สาขาวิชาคอมพิวเตอร์ศึกษา (ComCru)', note: 'วันนี้เรียนเขียนโปรแกรมเข้าใจมาก!', timestamp: Date.now() - 86400000 },
+                    { mood: 'ฉ่ำ', majorValue: 'ComCru', majorText: 'สาขาวิชาคอมพิวเตอร์ศึกษา (ComCru)', note: 'วันนี้เรียนเข้าใจมาก!', timestamp: Date.now() - 86400000 },
                     { mood: 'นอยด์', majorValue: 'IT', majorText: 'สาขาวิชาเทคโนโลยีสารสนเทศ', note: 'ฝนตก รถติด มาสายเลย', timestamp: Date.now() - 3600000 }
                 ];
-            } else { appData = firestoreData; }
+            } else { 
+                appData = firestoreData; 
+            }
 
-            if (!document.getElementById('student-stats-section').classList.contains('hidden')) { updateStudentChart(); renderStudentHistory(); }
-            if (!document.getElementById('view-staff').classList.contains('hidden')) updateStaffDashboard();
-        }, (error) => { console.warn("ใช้ระบบ Mock Data จำลองเนื่องจากไม่ได้เชื่อมต่อ:", error.message); });
-
+            if (!document.getElementById('student-stats-section').classList.contains('hidden')) { 
+                updateStudentChart(); 
+                renderStudentHistory(); 
+            }
+            if (!document.getElementById('view-staff').classList.contains('hidden')) {
+                updateStaffDashboard();
+            }
+        }, (error) => { 
+            console.warn("ระบบเชื่อมต่อจำลองทำงาน:", error.message); 
+        });
     </script>
 </body>
 </html>
