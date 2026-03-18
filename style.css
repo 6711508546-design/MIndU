@@ -3,7 +3,7 @@
     --text-main: #2b2d42; 
     --white: #ffffff; 
     --shadow: 0 10px 25px rgba(0,0,0,0.08);
-    --glass-bg: rgba(255, 255, 255, 0.95);
+    --glass-bg: rgba(255, 255, 255, 0.95); 
     --primary-blue: #a2d2ff;
 }
 
@@ -69,14 +69,7 @@ select { margin-bottom: 25px; cursor: pointer; }
 
 #encouragement-msg { display: none; background: #caffbf; padding: 18px; border-radius: 14px; text-align: center; margin-top: 25px; font-weight: 600; font-size: 18px; animation: bounceIn 0.5s; }
 
-/* กล่องอธิบายกราฟ (เกณฑ์ให้คะแนน) */
-.chart-legend {
-    background: #f8f9fa; padding: 18px; border-radius: 14px; border-left: 5px solid #cdb4db;
-    margin-top: 25px; font-size: 15px; line-height: 1.6; color: #4a4e69; text-align: left;
-}
-.chart-legend ul { margin-top: 10px; margin-left: 20px; }
-.chart-legend li { margin-bottom: 5px; }
-
+/* ประวัติการระบาย */
 .history-list { display: flex; flex-direction: column; gap: 15px; max-height: 400px; overflow-y: auto; padding-right: 5px; margin-top: 15px; }
 .history-list::-webkit-scrollbar { width: 8px; } .history-list::-webkit-scrollbar-thumb { background: #cdb4db; border-radius: 10px; }
 .history-card { background: #fdfdfd; border-left: 6px solid var(--primary-blue); padding: 18px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); text-align: left; }
@@ -84,20 +77,19 @@ select { margin-bottom: 25px; cursor: pointer; }
 .history-mood { font-size: 18px; font-weight: 600; } .history-time { font-size: 14px; color: #6c757d; background: #f8f9fa; padding: 4px 10px; border-radius: 20px; }
 .history-note { font-size: 16px; color: #4a4e69; line-height: 1.5; white-space: pre-wrap; margin-top: 5px; }
 
+/* ฟีดอาจารย์ */
 .staff-feed-card { display: flex; align-items: center; gap: 15px; background: #fff; padding: 12px 15px; border-radius: 12px; border: 1px solid #e9ecef; margin-bottom: 10px; }
 .staff-feed-emoji { font-size: 30px; } .staff-feed-info { flex: 1; }
 .staff-feed-major { font-weight: 600; font-size: 15px; color: #3d405b; } .staff-feed-time { font-size: 13px; color: #adb5bd; }
 
 .hidden { display: none !important; }
 
-/* ================= การตั้งค่าให้รองรับจอมือถือ (Responsive) ================= */
+/* ปรับสัดส่วนให้พอดีกับมือถือแบบอัตโนมัติ */
 @media (max-width: 600px) {
     .container { padding: 20px; border-radius: 18px; margin-top: 0; }
-    h1 { font-size: 26px; }
-    h2 { font-size: 22px; }
+    h1 { font-size: 26px; } h2 { font-size: 22px; }
     .role-card { min-width: 100%; padding: 30px 15px; font-size: 20px; }
     .mood-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
     .mood-btn { padding: 10px; font-size: 15px; }
     .mood-btn span.emoji { font-size: 32px; }
-    .chart-legend { font-size: 14px; padding: 15px; }
 }
