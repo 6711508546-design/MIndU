@@ -4,6 +4,7 @@
     --white: #ffffff;
     --shadow: 0 10px 25px rgba(0,0,0,0.08);
     --glass-bg: rgba(255, 255, 255, 0.85);
+    --primary-blue: #a2d2ff;
 }
 
 * {
@@ -13,7 +14,7 @@
     font-family: 'Kanit', sans-serif;
 }
 
-/* พื้นหลังสีพาสเทลแบบขยับได้ (Animated Gradient) */
+/* พื้นหลังสีพาสเทลแบบขยับได้ */
 body {
     background: linear-gradient(-45deg, #ffc8dd, #bde0fe, #cdb4db, #ffffb5);
     background-size: 400% 400%;
@@ -32,7 +33,7 @@ body {
     100% { background-position: 0% 50%; }
 }
 
-/* กล่องเนื้อหาหลัก (สไตล์กระจกใส หรือ Glassmorphism) */
+/* กล่องเนื้อหาหลัก */
 .container {
     width: 100%;
     max-width: 800px;
@@ -51,9 +52,10 @@ body {
     100% { transform: scale(1); opacity: 1; }
 }
 
-h1, h2, h3 { text-align: center; margin-bottom: 20px; }
+h1, h2, h3, h4 { text-align: center; margin-bottom: 20px; }
 .text-center { text-align: center; }
 .mt-3 { margin-top: 20px; }
+.mt-4 { margin-top: 35px; }
 
 /* การตกแต่งปุ่มทั่วไป */
 .btn {
@@ -67,15 +69,10 @@ h1, h2, h3 { text-align: center; margin-bottom: 20px; }
     box-shadow: 0 4px 15px rgba(0,0,0,0.1);
 }
 
-.btn-primary { 
-    background: linear-gradient(135deg, #a2d2ff, #bde0fe); 
-    color: var(--text-main); width: 100%; font-size: 18px; 
-}
+.btn-primary { background: linear-gradient(135deg, #a2d2ff, #bde0fe); color: var(--text-main); width: 100%; font-size: 18px; }
 .btn-primary:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 8px 20px rgba(162, 210, 255, 0.5); }
-
 .btn-secondary { background: linear-gradient(135deg, #cdb4db, #ffc8dd); color: var(--text-main); }
 .btn-secondary:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(205, 180, 219, 0.5); }
-
 .btn-back { background: #f8f9fa; margin-bottom: 25px; box-shadow: none; border: 1px solid #dee2e6; }
 .btn-back:hover { background: #e9ecef; transform: translateX(-5px); }
 
@@ -83,9 +80,7 @@ h1, h2, h3 { text-align: center; margin-bottom: 20px; }
 .role-buttons { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; margin-top: 40px; }
 .role-card {
     flex: 1; min-width: 250px; padding: 50px 20px; text-align: center; border-radius: 20px; cursor: pointer;
-    transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
-    background: linear-gradient(135deg, #bde0fe, #a2d2ff); 
-    font-size: 22px; font-weight: 600; border: 3px solid white;
+    transition: 0.4s; background: linear-gradient(135deg, #bde0fe, #a2d2ff); font-size: 22px; font-weight: 600; border: 3px solid white;
 }
 .role-card.staff { background: linear-gradient(135deg, #ffc8dd, #ffafcc); }
 .role-card:hover { transform: translateY(-10px) rotate(-1deg); box-shadow: 0 15px 30px rgba(0,0,0,0.15); }
@@ -93,10 +88,10 @@ h1, h2, h3 { text-align: center; margin-bottom: 20px; }
 /* Grid ของปุ่มอารมณ์ */
 .mood-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; margin-bottom: 25px; }
 
-/* ลูกเล่นปุ่มอารมณ์ (Hover แล้วอิโมจิขยาย) */
+/* ลูกเล่นปุ่มอารมณ์ */
 .mood-btn {
     background: var(--white); border: 3px solid #f8f9fa; border-radius: 20px; padding: 15px 10px;
-    font-size: 18px; font-weight: 500; cursor: pointer; transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    font-size: 18px; font-weight: 500; cursor: pointer; transition: 0.3s;
     display: flex; flex-direction: column; align-items: center; gap: 8px; position: relative; overflow: hidden;
 }
 .mood-btn span.emoji { font-size: 40px; transition: 0.3s; }
@@ -145,9 +140,27 @@ select:focus { border-color: #a2d2ff; }
     animation: bounceIn 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 }
 
-/* คลาสสำหรับซ่อน Element */
-.hidden { display: none !important; }
-.summary-box {
-    background-color: #f0f8ff; padding: 15px; border-radius: 10px; margin-bottom: 20px; font-size: 0.95rem; border-left: 5px solid var(--pastel-blue);
+/* ====== ส่วนที่เพิ่มใหม่: ตกแต่ง History Log (ประวัติข้อความ) ====== */
+.history-list {
+    display: flex; flex-direction: column; gap: 15px; max-height: 400px; overflow-y: auto; padding-right: 5px;
 }
-.dashboard-charts { display: flex; flex-direction: column; gap: 20px; }
+/* แต่ง Scrollbar ให้สวยงามเวลามีประวัติเยอะๆ */
+.history-list::-webkit-scrollbar { width: 8px; }
+.history-list::-webkit-scrollbar-thumb { background: #cdb4db; border-radius: 10px; }
+
+/* การ์ดประวัติแต่ละอัน */
+.history-card {
+    background: #fdfdfd; border-left: 6px solid var(--primary-blue); padding: 18px;
+    border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.04); text-align: left;
+    border-top: 1px solid #f1f1f1; border-right: 1px solid #f1f1f1; border-bottom: 1px solid #f1f1f1;
+}
+.history-header { 
+    display: flex; justify-content: space-between; align-items: center; 
+    border-bottom: 1px dashed #e9ecef; padding-bottom: 10px; margin-bottom: 10px; 
+}
+.history-mood { font-size: 18px; font-weight: 600; color: #2b2d42; }
+.history-time { font-size: 14px; color: #6c757d; background: #f8f9fa; padding: 4px 10px; border-radius: 20px; }
+.history-note { font-size: 16px; color: #4a4e69; line-height: 1.5; white-space: pre-wrap; margin-top: 5px; }
+.history-note.empty { color: #adb5bd; font-style: italic; } /* กรณีไม่ได้พิมพ์ข้อความ */
+
+.hidden { display: none !important; }
