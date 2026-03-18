@@ -1,123 +1,152 @@
-/* โทนสีพาสเทลตามกำหนด */
+/* ================= CSS: การตกแต่งและสีสัน ================= */
 :root {
-    --pastel-blue: #aec6cf;
-    --pastel-green: #b2e2b2;
-    --pastel-purple: #c3b1e1;
-    --bg-color: #fcfbfe;
-    --text-dark: #4a4a4a;
-    --card-bg: #ffffff;
+    --text-main: #2b2d42;
+    --white: #ffffff;
+    --shadow: 0 10px 25px rgba(0,0,0,0.08);
+    --glass-bg: rgba(255, 255, 255, 0.85);
 }
 
-* { box-sizing: border-box; font-family: 'Prompt', sans-serif; margin: 0; padding: 0; }
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Kanit', sans-serif;
+}
 
+/* พื้นหลังสีพาสเทลแบบขยับได้ (Animated Gradient) */
 body {
-    background-color: var(--bg-color);
-    color: var(--text-dark);
-    display: flex;
-    justify-content: center;
+    background: linear-gradient(-45deg, #ffc8dd, #bde0fe, #cdb4db, #ffffb5);
+    background-size: 400% 400%;
+    animation: gradientBG 15s ease infinite;
+    color: var(--text-main);
     min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
 }
 
+@keyframes gradientBG {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* กล่องเนื้อหาหลัก (สไตล์กระจกใส หรือ Glassmorphism) */
 .container {
     width: 100%;
-    max-width: 600px;
-    background-color: var(--card-bg);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-    min-height: 100vh;
-    position: relative;
+    max-width: 800px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    border-radius: 24px;
+    box-shadow: var(--shadow);
+    padding: 35px;
+    margin-top: 10px;
+    animation: bounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    border: 2px solid rgba(255, 255, 255, 0.5);
 }
 
-/* ส่วนหัวของแอป */
-header {
-    background: linear-gradient(135deg, var(--pastel-purple), var(--pastel-blue));
-    color: white;
-    padding: 20px;
-    text-align: center;
-    border-bottom-left-radius: 20px;
-    border-bottom-right-radius: 20px;
-    position: relative;
+@keyframes bounceIn {
+    0% { transform: scale(0.9); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
 }
 
-.back-btn {
-    position: absolute;
-    left: 20px;
-    top: 25px;
-    background: rgba(255,255,255,0.3);
+h1, h2, h3 { text-align: center; margin-bottom: 20px; }
+.text-center { text-align: center; }
+.mt-3 { margin-top: 20px; }
+
+/* การตกแต่งปุ่มทั่วไป */
+.btn {
+    padding: 14px 28px;
     border: none;
-    color: white;
-    padding: 5px 15px;
-    border-radius: 15px;
+    border-radius: 16px;
+    font-size: 16px;
     cursor: pointer;
-    display: none;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    font-weight: 600;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
 }
 
-.content { padding: 20px; }
+.btn-primary { 
+    background: linear-gradient(135deg, #a2d2ff, #bde0fe); 
+    color: var(--text-main); width: 100%; font-size: 18px; 
+}
+.btn-primary:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 8px 20px rgba(162, 210, 255, 0.5); }
 
-/* จัดการการแสดงผลของแต่ละหน้า */
-.view { display: none; animation: fadeIn 0.4s; }
-.view.active { display: block; }
-@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+.btn-secondary { background: linear-gradient(135deg, #cdb4db, #ffc8dd); color: var(--text-main); }
+.btn-secondary:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(205, 180, 219, 0.5); }
+
+.btn-back { background: #f8f9fa; margin-bottom: 25px; box-shadow: none; border: 1px solid #dee2e6; }
+.btn-back:hover { background: #e9ecef; transform: translateX(-5px); }
 
 /* หน้าเลือก Role */
-.role-btn {
-    width: 100%; padding: 20px; margin-bottom: 15px;
-    font-size: 1.2rem; border: none; border-radius: 15px;
-    cursor: pointer; transition: 0.3s;
-    display: flex; align-items: center; justify-content: center; gap: 10px;
+.role-buttons { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; margin-top: 40px; }
+.role-card {
+    flex: 1; min-width: 250px; padding: 50px 20px; text-align: center; border-radius: 20px; cursor: pointer;
+    transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+    background: linear-gradient(135deg, #bde0fe, #a2d2ff); 
+    font-size: 22px; font-weight: 600; border: 3px solid white;
 }
-.btn-student { background-color: var(--pastel-blue); color: white; }
-.btn-staff { background-color: var(--pastel-purple); color: white; }
-.role-btn:hover { filter: brightness(0.95); transform: scale(1.02); }
+.role-card.staff { background: linear-gradient(135deg, #ffc8dd, #ffafcc); }
+.role-card:hover { transform: translateY(-10px) rotate(-1deg); box-shadow: 0 15px 30px rgba(0,0,0,0.15); }
 
-/* หน้า Student */
-h3 { margin-bottom: 15px; text-align: center; color: var(--text-dark); }
-.emotions-grid {
-    display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px;
-}
-@media (max-width: 400px) { .emotions-grid { grid-template-columns: repeat(3, 1fr); } }
+/* Grid ของปุ่มอารมณ์ */
+.mood-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; margin-bottom: 25px; }
 
-.emotion-item {
-    background-color: #f5f5f5; border: 2px solid transparent;
-    border-radius: 15px; padding: 15px 5px; text-align: center;
-    cursor: pointer; transition: 0.2s;
+/* ลูกเล่นปุ่มอารมณ์ (Hover แล้วอิโมจิขยาย) */
+.mood-btn {
+    background: var(--white); border: 3px solid #f8f9fa; border-radius: 20px; padding: 15px 10px;
+    font-size: 18px; font-weight: 500; cursor: pointer; transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    display: flex; flex-direction: column; align-items: center; gap: 8px; position: relative; overflow: hidden;
 }
-.emotion-item.selected {
-    background-color: #f0e6ff; border-color: var(--pastel-purple); transform: scale(1.05);
-}
-.emoji { font-size: 2rem; display: block; margin-bottom: 5px; }
-.emoji-label { font-size: 0.8rem; font-weight: 500; }
+.mood-btn span.emoji { font-size: 40px; transition: 0.3s; }
+.mood-btn:hover { transform: translateY(-5px); }
+.mood-btn:hover span.emoji { transform: scale(1.2); }
 
+/* สีกรอบและพื้นหลัง เมื่อกดเลือกอารมณ์แต่ละแบบ */
+.mood-btn[data-color="gold"].active { border-color: #ffd6a5; background: #fff9f0; box-shadow: 0 5px 15px rgba(255,214,165,0.5); }
+.mood-btn[data-color="green"].active { border-color: #caffbf; background: #f2fcf1; box-shadow: 0 5px 15px rgba(202,255,191,0.5); }
+.mood-btn[data-color="pink"].active { border-color: #ffadad; background: #fff0f0; box-shadow: 0 5px 15px rgba(255,173,173,0.5); }
+.mood-btn[data-color="blue"].active { border-color: #a0c4ff; background: #f0f5ff; box-shadow: 0 5px 15px rgba(160,196,255,0.5); }
+.mood-btn[data-color="orange"].active { border-color: #fdffb6; background: #fffff0; box-shadow: 0 5px 15px rgba(253,255,182,0.5); }
+.mood-btn[data-color="dark"].active { border-color: #bdb2ff; background: #f6f5ff; box-shadow: 0 5px 15px rgba(189,178,255,0.5); }
+.mood-btn[data-color="red"].active { border-color: #ffc6ff; background: #fff5ff; box-shadow: 0 5px 15px rgba(255,198,255,0.5); }
+.mood-btn[data-color="cyan"].active { border-color: #9bf6ff; background: #f0fdff; box-shadow: 0 5px 15px rgba(155,246,255,0.5); }
+
+/* กล่องข้อความ และ Select Box */
 textarea {
-    width: 100%; height: 100px; padding: 15px; border-radius: 15px;
-    border: 1px solid #ddd; resize: none; margin-bottom: 15px;
-    background-color: #fdfdfd; font-size: 0.95rem;
+    width: 100%; height: 110px; padding: 18px; border: 2px solid #e9ecef; border-radius: 16px; resize: none;
+    font-size: 16px; margin-bottom: 20px; outline: none; transition: 0.3s; background: rgba(255,255,255,0.9);
 }
-textarea:focus { outline: none; border-color: var(--pastel-purple); }
+textarea:focus { border-color: #a2d2ff; box-shadow: 0 0 0 4px rgba(162, 210, 255, 0.2); }
 
-.btn-submit {
-    width: 100%; padding: 15px; background-color: var(--pastel-green);
-    color: #2d5a2d; font-size: 1.1rem; font-weight: 600;
-    border: none; border-radius: 25px; cursor: pointer; transition: 0.3s;
+select {
+    width: 100%; padding: 15px; border-radius: 14px; border: 2px solid #e9ecef; margin-bottom: 25px; 
+    font-size: 16px; outline: none; transition: 0.3s; background: white; cursor: pointer;
 }
-.btn-submit:hover { filter: brightness(0.95); box-shadow: 0 5px 15px rgba(178, 226, 178, 0.4); }
+select:focus { border-color: #a2d2ff; }
 
-/* Notification Message */
-.msg-box {
-    display: none; padding: 15px; margin-top: 15px;
-    border-radius: 10px; text-align: center; font-weight: 500;
-    background-color: #fff3cd; color: #856404;
+/* ส่วนแสดงกราฟ และ สถิติ */
+.chart-container {
+    margin-top: 35px; padding-top: 25px; border-top: 2px dashed #cdb4db; animation: fadeIn 0.5s ease;
+    background: white; border-radius: 20px; padding: 20px; box-shadow: var(--shadow);
 }
 
-/* ส่วนของกราฟและ History */
-.chart-container { margin-top: 30px; padding: 15px; background: white; border-radius: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-.history-list { margin-top: 15px; max-height: 200px; overflow-y: auto; }
-.history-item { padding: 10px; border-bottom: 1px solid #eee; font-size: 0.9rem; display: flex; justify-content: space-between; align-items: center; }
-
-/* หน้า Staff Dashboard */
-.filter-group { margin-bottom: 20px; display: flex; gap: 10px; }
-select, input[type="date"] {
-    flex: 1; padding: 10px; border-radius: 10px; border: 1px solid #ddd; font-family: 'Prompt';
+.stats-box {
+    background: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%); color: var(--text-main);
+    padding: 20px; border-radius: 16px; text-align: center; margin-bottom: 25px; font-size: 18px;
+    font-weight: 500; border: 2px solid white; box-shadow: 0 5px 15px rgba(0,0,0,0.05);
 }
+
+/* กล่องข้อความให้กำลังใจ */
+#encouragement-msg {
+    display: none; background: #caffbf; padding: 18px; border-radius: 14px;
+    text-align: center; margin-top: 25px; font-weight: 600; font-size: 18px;
+    animation: bounceIn 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+/* คลาสสำหรับซ่อน Element */
+.hidden { display: none !important; }
 .summary-box {
     background-color: #f0f8ff; padding: 15px; border-radius: 10px; margin-bottom: 20px; font-size: 0.95rem; border-left: 5px solid var(--pastel-blue);
 }
