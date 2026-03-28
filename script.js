@@ -4,12 +4,13 @@ import { getFirestore, collection, addDoc, onSnapshot, query, orderBy }
 from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
 const firebaseConfig = {
-    apiKey: "AIzaSyDiUc6y2M5FCu-tEnY1mgYGgVhu7H-PFnE", 
-    authDomain: "mindu-9f4b0.firebaseapp.com",
-    projectId: "mindu-9f4b0", 
-    storageBucket: "mindu-9f4b0.firebasestorage.app",
-    messagingSenderId: "237113799668", 
-    appId: "1:237113799668:web:0842f44252a1650a3abfa1"
+    apiKey: "AIzaSyDiUc6y2M5FCu-tEnY1mgYGgVhu7H-PFnE",
+  authDomain: "mindu-9f4b0.firebaseapp.com",
+  projectId: "mindu-9f4b0",
+  storageBucket: "mindu-9f4b0.firebasestorage.app",
+  messagingSenderId: "237113799668",
+  appId: "1:237113799668:web:56a7810a228e5d5c3abfa1",
+  measurementId: "G-7SH271SHZ1"
 };
 
 const app = initializeApp(firebaseConfig);
